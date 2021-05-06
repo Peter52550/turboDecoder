@@ -1,6 +1,7 @@
-module siso(
+module Siso(
              clk_p_i,
              reset_n_i,
+             i_rst,
              data_i,
              data_o
              );
@@ -12,6 +13,7 @@ module siso(
   input   signed  [input_size-1:0]  sys_i;
   input   signed  [input_size-1:0]  ext_i;
   output  [15:0]  data_o;
+
 
   parameter data_size = 10;
   parameter neg_inf   = -512;   // - 2^(data_size-1) 
@@ -98,7 +100,6 @@ module siso(
         end = 1;
 			end
 		endcase
-
   end
   // task prune(
   //   input   [1:0] m,
