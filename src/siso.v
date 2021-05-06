@@ -1,24 +1,23 @@
 module Siso(
              clk_p_i,
-             reset_n_i,
-             i_rst,
+             rst_n_i,
              data_i,
              data_o
              );
 
   /*========================IO declaration============================ */	  
-  input           clk_p_i;
-  input           reset_n_i;
+  input                             clk_p_i;
+  input                             reset_n_i;
   input   signed  [input_size-1:0]  enc_i;
   input   signed  [input_size-1:0]  sys_i;
   input   signed  [input_size-1:0]  ext_i;
-  output  [15:0]  data_o;
+  output          [15:0]            data_o;
 
 
   parameter data_size = 10;
   parameter neg_inf   = -512;   // - 2^(data_size-1) 
-  parameter input_size = 7;
-  parameter block_size = 21;
+  parameter input_size = 5;
+  parameter block_size = 21;    // 3 * (input_size+2)
   /* =======================REG & wire================================ */
 	reg					[1:0]						state, state_nxt;
 	reg         								in, out;
