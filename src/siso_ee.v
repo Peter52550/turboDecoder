@@ -1,7 +1,6 @@
-module Siso(
+module siso(
              clk_p_i,
              reset_n_i,
-             i_rst,
              data_i,
              data_o
              );
