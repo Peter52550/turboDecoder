@@ -68,5 +68,6 @@ class TurboDecoder:
         for _ in range(self.max_iter):
             if self.iterate(vector):
                 break
-
-        return self.LLR_ext
+        ans = self.LLR_ext
+        self.reset()
+        return ans

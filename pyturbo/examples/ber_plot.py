@@ -28,7 +28,7 @@ def convert(a, bit, bound):
 
 def create_ber_plot(plot_params):
     block_size = plot_params["block_size"]
-    num_trials = plot_params["num_trials"]
+    #num_trials = plot_params["num_trials"]
     #bits_num   = plot_params["bits_num"]
     boundary   = plot_params["boundary"]
 
@@ -40,77 +40,36 @@ def create_ber_plot(plot_params):
     decoder = TurboDecoder(interleaver)
 
     coded_errors = np.zeros(len(snr_range))
-    truncated_errors_0 = np.zeros(len(snr_range))
-    truncated_errors_1 = np.zeros(len(snr_range))
-    truncated_errors_2 = np.zeros(len(snr_range))
-    truncated_errors_3 = np.zeros(len(snr_range))
-    truncated_errors_4 = np.zeros(len(snr_range))
-    truncated_errors_5 = np.zeros(len(snr_range))
     uncoded_errors = np.zeros(len(snr_range))
 
+    truncated_errors = []
+    for i in range(len(bit_range)):
+        truncated_errors.append(np.zeros(len(snr_range)))
+
     for n in range(len(snr_range)):
-        for _ in range(num_trials):
+        while()
             input_vector = np.random.randint(2, size=block_size)
-            #print(f"input: {input_vector[:10]}")
             encoded_vector = encoder.execute(input_vector)
-            #print(f"after encode: {encoded_vector[:10]}")
+
             channel = AWGN(snr_range[n])
 
             channel_vector = list(map(float, encoded_vector))
             channel_vector = channel.convert_to_symbols(channel_vector)
-
             uncoded_vector = list(map(float, input_vector))
             uncoded_vector = channel.convert_to_symbols(uncoded_vector)
 
             channel_vector = channel.execute(channel_vector)
-            #print(f"encoded after AWGN: {channel_vector[:10]}")
             decoded_vector = decoder.execute(channel_vector)
-            decoder.reset()
-            #print(f"decoded pre-decision: {decoded_vector[:10]}")
-            channel_vector_0 = convert(channel_vector, bit_range[0], boundary) 
-            channel_vector_1 = convert(channel_vector, bit_range[1], boundary) 
-            channel_vector_2 = convert(channel_vector, bit_range[2], boundary) 
-            channel_vector_3 = convert(channel_vector, bit_range[3], boundary) 
-            channel_vector_4 = convert(channel_vector, bit_range[4], boundary) 
-            channel_vector_5 = convert(channel_vector, bit_range[5], boundary) 
-            # print(channel_vector_0)
-            # print(channel_vector_1)
-            # print(channel_vector_2)
-            # print(channel_vector_3)
-            
-            #print(f"encoded after truncate: {channel_vector}")
-            decoded_vector_0 = decoder.execute(channel_vector_0)
-            decoder.reset()
-            decoded_vector_1 = decoder.execute(channel_vector_1)
-            decoder.reset()
-            decoded_vector_2 = decoder.execute(channel_vector_2)
-            decoder.reset()
-            decoded_vector_3 = decoder.execute(channel_vector_3)
-            decoder.reset()
-            decoded_vector_4 = decoder.execute(channel_vector_4)
-            decoder.reset()
-            decoded_vector_5 = decoder.execute(channel_vector_5)
-            decoder.reset()
-            # print(decoded_vector_0)
-            # print(decoded_vector_1)
-            # print(decoded_vector_2)
-            # print(decoded_vector_3)
-            #print(f"truncated pre-decision: {decoded_vector_2}")
             decoded_vector = [int(b > 0.0) for b in decoded_vector]
-            decoded_vector_0 = [int(b > 0.0) for b in decoded_vector_0]
-            decoded_vector_1 = [int(b > 0.0) for b in decoded_vector_1]
-            decoded_vector_2 = [int(b > 0.0) for b in decoded_vector_2]
-            decoded_vector_3 = [int(b > 0.0) for b in decoded_vector_3]
-            decoded_vector_4 = [int(b > 0.0) for b in decoded_vector_4]
-            decoded_vector_5 = [int(b > 0.0) for b in decoded_vector_5]
-            #print(f"decoded post-decision: {decoded_vector}")
-            #print(f"truncated post-decision: {decoded_vector_2}")
+
+            for i in range(len(bit_range)):
+                if (total errors less than 200):
+                    truncated_vector = convert(channel_vector, bit_range[i], boundary)
+                    truncated_vector = decoder.execute(truncated_vector)
+                    truncated_vector = [int(b > 0.0) for b in truncated_vector]
 
             uncoded_vector = channel.execute(uncoded_vector)
-            #print(f"input after AWGN: {uncoded_vector}")
             uncoded_vector = [int(b > 0.0) for b in uncoded_vector]
-            #print(f"input post-decision: {uncoded_vector}")
-            # decoder.reset()
 
             coded_error_count = sum([x ^ y for x, y in zip(input_vector, decoded_vector)])
             truncated_error_count_0 = sum([x ^ y for x, y in zip(input_vector, decoded_vector_0)])
