@@ -10,7 +10,7 @@ module Siso(
   );
 
   /*========================Parameter declaration===================== */	
-  parameter data_size   = 5'd10;            // every number size = 4
+  parameter data_size   = 5'd10;            // every number size 
   parameter input_size  = 5;                // input size (bit length) before encoding = 5
   parameter extend_size = 7;                // input_size + 2][adding 00 at the end
   parameter block_size  = 21;               // 3 * (input_size + 2)
@@ -58,10 +58,11 @@ module Siso(
     done_nxt = 0;
 		case(state)
       READ_DATA: begin
-          if(read_en_i == 1) begin
-            sys[read_counter][0:6] = sys_i;
-            enc[read_counter][0:6] = enc_i;
-            ext[read_counter][0:6] = ext_i;
+          if (read_en_i == 1) begin
+            sys[6:0][read_counter] = sys_i;
+            enc[6:0][read_counter] = enc_i;
+            ext[6:0][read_counter] = ext_i;
+
             read_counter_nxt = read_counter + 1;
             if(read_counter == 4) begin
               state_nxt = BRANCH;
