@@ -7,12 +7,14 @@ module Decoder(
              );
 
   /*========================IO declaration============================ */	 
+
       // parameter MAX_ITER = 16;
       parameter data_size = 5'd10;
       parameter input_size = 5;
       parameter extend_size = 7;                // input_size + 2, adding 00 at the end
       parameter block_size  = 21;               // 3 * (input_size + 2)
       parameter S_READ            = 3'd0;
+
       parameter S_DEC1            = 3'd1;
       parameter S_DEC1_FINISH     = 3'd2;
       parameter S_DEC2            = 3'd3;
@@ -21,8 +23,10 @@ module Decoder(
 
       input                       clk_p_i;
       input                       reset_n_i;
+
       input   [block_size-1:0]    data_i;
       output  [input_size-1:0]    data_o;
+
 
   /* =======================REG & wire================================ */
       reg     [3:0]               vec0         [0:extend_size-1];
@@ -99,6 +103,7 @@ module Decoder(
       .reset_n_i(reset_n_i),
       .data_i(vec0[6:0][0]),
       .data_o(vec0_ITL[6:0][0]),
+
     );
 
   /* ====================Combinational Part================== */
