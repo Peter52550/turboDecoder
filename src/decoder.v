@@ -8,8 +8,8 @@ module Decoder(
 
   /*========================IO declaration============================ */	 
       parameter MAX_ITER = 16;
-      parameter data_size;
-      parameter input_size;
+      parameter data_size = 5;
+      parameter input_size = 28;
       parameter S_START           = 3'd0;
       parameter S_DEC1            = 3'd1;
       parameter S_DEC1_FINISH     = 3'd2;
@@ -19,7 +19,7 @@ module Decoder(
 
       input                       clk_p_i;
       input                       reset_n_i;
-      input   [215:0]             data_i;
+      input   [83:0]              data_i;
       output  [data_size-1:0]     data_o;
 
   /* =======================REG & wire================================ */
@@ -43,10 +43,10 @@ module Decoder(
       reg [5:0]          counter_r;
       
     Siso siso(
-      .i_clk(i_clk),
-      .i_rst(i_rst),
-      .i_start(begin_r),
-      .i_finish(dec_finish_r),
+      .clki_(i_clk),
+      .rsti_(i_rst),
+      .read_en_i(begin_r),
+      .done(dec_finish_r),
     );
 
   /* ====================Combinational Part================== */
