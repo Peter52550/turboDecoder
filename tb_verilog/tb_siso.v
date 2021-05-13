@@ -56,7 +56,7 @@ initial	$readmemh (`EXPECT, out_mem);
 
 initial begin
    clk         = 1'b1;
-   rst         = 1'b1;
+   rst         = 1'b1;kjl
    stop        = 1'b0;
    counter     = 0;
    done        = 0;
