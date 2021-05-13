@@ -48,7 +48,7 @@ module Decoder(
       // reg     [3:0]               sys_r  [0:extend_size-1];
       // reg     [3:0]               enc_r  [0:extend_size-1];
       // reg     [3:0]               ext_r  [0:extend_size-1];
-             
+
       reg     [3:0]               state;
       reg     [3:0]               state_nxt;
       reg     [1:0]               read_counter;     
