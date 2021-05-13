@@ -80,8 +80,8 @@ always @(negedge clk)begin
     if(counter < INPUT_SIZE) begin
         if(iter < 4) begin
             start       = 1;
-            data        = input_mem[(counter+1)*7: counter*7];
-            iter        = iter + 1;
+            data        = input_mem[(counter+1)*21: counter*21];
+            iter        = iter+1;
             counter     = counter+1;
         end
         else begin
