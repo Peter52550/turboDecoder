@@ -47,7 +47,8 @@ def create_ber_plot(plot_params):
         truncated_errors.append(np.zeros(len(snr_range)))
 
     for n in range(len(snr_range)):
-        while()
+        count = 0
+        while True:
             input_vector = np.random.randint(2, size=block_size)
             encoded_vector = encoder.execute(input_vector)
 
@@ -63,7 +64,7 @@ def create_ber_plot(plot_params):
             decoded_vector = [int(b > 0.0) for b in decoded_vector]
 
             for i in range(len(bit_range)):
-                if (total errors less than 200):
+                if (total errors < 200):
                     truncated_vector = convert(channel_vector, bit_range[i], boundary)
                     truncated_vector = decoder.execute(truncated_vector)
                     truncated_vector = [int(b > 0.0) for b in truncated_vector]

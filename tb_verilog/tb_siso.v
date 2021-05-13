@@ -25,23 +25,30 @@ parameter  [15:0] answer_arr [0:4] = '{
     };
 
 reg           clk, rst, over, stop;
-reg   [7:0]   data;
-wire  [15:0]  out;
-reg   [15:0]  out_temp;       
+reg   [83:0]   data;
+reg   [6:0]   sys;
+reg   [6:0]   enc;
+reg   [6:0]   ext;
+wire  [9:0]   out;
+reg   [9:0]  out_temp;       
 reg   [15:0]  err;
+reg            done;
 
-reg   [7:0]   input_mem     [0:INPUT_SIZE-1];
-reg   [15:0]  out_mem       [0:INPUT_SIZE-1];
+reg   [83:0]   input_mem     ;
+reg   [9:0]    out_mem       [0:INPUT_SIZE-1];
 
-integer       iter, counter;
+integer  counter;
 
 
 Siso siso0(
-        .i_rst_n(rst), 
-        .i_clk(clk),
-        .i_start(start),
-        .i_data(data),
-        .o_data(out)
+        .clk_i(clk),
+        .rst_n_i(rst), 
+        .read_en_i(en),
+        .sys_i(sys),
+        .enc_i(enc),
+        .ext_i(ext),
+        .data_o(out),
+        .done(done),
     );       
    
 initial	$readmemh (`INPUT,  input_mem);
@@ -50,9 +57,12 @@ initial	$readmemh (`EXPECT, out_mem);
 initial begin
    clk         = 1'b1;
    rst         = 1'b1;
+   sys         = 7'b0;
+   enc         = 7'b0;
+   ext         = 7'b0;
    stop        = 1'b0;
    counter     = 0;
-   data        = data_arr[0];
+//    data        = data_arr[0];
    pattern_num = 0; 
     #2.5 reset=1'b0;                       
     #2.5 reset=1'b1;
@@ -63,7 +73,7 @@ end
 always begin #(`CYCLE/2) clk = ~clk; end
 
 initial begin
-	$dumpfile("decoder.fsdb");
+	$dumpfile("siso.fsdb");
 	$dumpvars;
     out_f = $fopen("out.dat");
     out_error_f = $fopen("out_error.dat");
@@ -80,7 +90,9 @@ end
 
 always @(negedge clk)begin
     if(counter < INPUT_SIZE) begin
+        
         data        = input_mem[counter+1];
+        sys         = 
         out_temp    = out_mem[counter];
         counter     = counter+1;
     end
@@ -104,8 +116,8 @@ always @(posedge clk)begin
     $display("---------------------------------------------\n");
 end
 initial begin
-      @(posedge stop)      
-      if(stop) begin
+      @(posedge done)      
+      if(done) begin
         $display("---------------------------------------------\n");
         $display("There are %d errors!\n", err);
         $display("The total accuracy is %d/%d\n", err, INPUT_SIZE);
