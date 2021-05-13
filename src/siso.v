@@ -10,10 +10,10 @@ module Siso(
   );
 
   /*========================Parameter declaration===================== */	
-  parameter data_size   = 5'd10;             // every number size = 4
-  parameter input_size  = 5;                // before encode size = 5
-  parameter block_size  = 21;               // 3 * (input_size+2)
-  parameter extend_size = 7;                // input_size + 2
+  parameter data_size   = 5'd10;            // every number size = 4
+  parameter input_size  = 5;                // input size (bit length) before encoding = 5
+  parameter extend_size = 7;                // input_size + 2, adding 00 at the end
+  parameter block_size  = 21;               // 3 * (input_size + 2)
   parameter neg_inf     = {data_size{1}};   // - 2^(data_size-1) 
   parameter READ_DATA   = 3'b000;
   parameter BRANCH      = 3'b001;
@@ -25,11 +25,11 @@ module Siso(
   input                    clk_i;
   input                    reset_n_i;
   // input           	       data_i;       [0:block_size-1];  
-  input   signed  	   [extend_size-1:0]    sys_i;        ;  
-  input   signed  	   [extend_size-1:0]    enc_i;        ;
-  input   signed  	   [extend_size-1:0]    ext_i;        ;
-  output  signed		   [data_size-1:0]      data_o        ;
-  output  reg              done, done_nxt;
+  input  signed  [extend_size-1:0]  sys_i;
+  input  signed  [extend_size-1:0]  enc_i;
+  input  signed  [extend_size-1:0]  ext_i;
+  output signed  [data_size-1:0]    data_o;
+  output reg                        done, done_nxt;
 
   integer k;
   for(k=0;k<block_size;k=k+1) begin
@@ -39,22 +39,22 @@ module Siso(
   /* =======================REG & wire================================ */
 	reg					[1:0]						state, state_nxt;
 	reg signed	[data_size-1:0]	branch_metrics 			[0:extend_size-1] [0:3] [0:3];  // +-128
-	reg signed	[data_size-1:0]	forward_metrics 		[0:extend_size] [0:3];
-	reg signed	[data_size-1:0]	backward_metrics 		[0:extend_size] [0:3];
-  reg signed  [3:0]	  sys;               [0:extend_size-1];
-  reg signed  [3:0]	  enc;               [0:extend_size-1];
-  reg signed  [3:0]	  ext;               [0:extend_size-1];
+	reg signed	[data_size-1:0]	forward_metrics 		[0:extend_size  ] [0:3];
+	reg signed	[data_size-1:0]	backward_metrics 		[0:extend_size  ] [0:3];
+  reg signed  [3:0]	          sys                 [0:extend_size-1];
+  reg signed  [3:0]	          enc                 [0:extend_size-1];
+  reg signed  [3:0]	          ext                 [0:extend_size-1];
 
 	reg signed	[data_size-1:0]	LLR             		[0:extend_size-1];
-  reg         [1:0]   read_counter;     
-  reg         [1:0]   read_counter_nxt;   
+  reg         [1:0]           read_counter;     
+  reg         [1:0]           read_counter_nxt;   
 
   /* ====================Combinational Part================== */
 	always @(*) begin
     done_nxt = 0;
 		case(state)
       READ_DATA: begin
-          if(read_en_i === 1) begin
+          if(read_en_i == 1) begin
             sys[6:0][read_counter] = sys_i;
             enc[6:0][read_counter] = enc_i;
             ext[6:0][read_counter] = ext_i;
