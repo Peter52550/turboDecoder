@@ -1,4 +1,4 @@
-module Interleaver(
+module Deinterleaver(
              clk_p_i,
              reset_n_i,
              data_i,
@@ -13,7 +13,7 @@ module Interleaver(
 
   /* =======================REG & wire================================ */
         
-      assign data_o = { data_i[5], data_i[2], data_i[4], data_i[1], data_i[3], data_i[6], data_i[0] } 
+      assign data_o = { data_i[6], data_i[3], data_i[1], data_i[4], data_i[2], data_i[0], data_i[5] } 
 
   /* ====================Combinational Part================== */
   //next-state logic //todo
