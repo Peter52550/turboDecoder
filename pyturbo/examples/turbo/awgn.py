@@ -5,7 +5,7 @@
 #!/usr/bin/env python3
 
 import numpy as np 
-
+np.random.seed(42)
 
 class AWGN:
     @staticmethod

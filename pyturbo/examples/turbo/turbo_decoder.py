@@ -46,10 +46,12 @@ class TurboDecoder:
 
         return deinterleaved
 
-    def iterate(self, vector):
+    def iterate(self, vector, i):
         input_tuples = self.demultiplex(vector[::3], vector[1::3], self.LLR_ext)
-
-        LLR_1 = self.decoders[0].execute(input_tuples)
+        
+        LLR_1 = self.decoders[0].execute(input_tuples, i)
+        if i==0:
+            print("LLR_1", LLR_1)
         LLR_1 = LLR_1 - self.LLR_ext - 2 * vector[::3]
         LLR_interleaved = self.interleave(LLR_1)
 
@@ -65,9 +67,8 @@ class TurboDecoder:
         return self.early_exit(LLR_1, self.LLR_ext)
 
     def execute(self, vector):
-        for _ in range(self.max_iter):
-            if self.iterate(vector):
+        for i in range(self.max_iter):
+            if self.iterate(vector, i):
                 break
-        ans = self.LLR_ext
-        self.reset()
-        return ans
+
+        return self.LLR_ext

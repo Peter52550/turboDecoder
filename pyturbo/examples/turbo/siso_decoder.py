@@ -16,7 +16,7 @@ class SISODecoder:
 
     @staticmethod
     def init_path_metric(m, depth):
-        matrix = np.array(depth * [m * [-math.inf]])
+        matrix = np.array(depth * [m * [-512]])
         matrix[:, 0] = 0
         return matrix
 
@@ -62,6 +62,8 @@ class SISODecoder:
 
         backward_metrics = self.backward_metrics[k - 1, future_states]
         branch_metrics = self.branch_metrics[r, state, future_states]
+        #backward_metrics = self.backward_metrics[k + 1, future_states]
+        #branch_metrics = self.branch_metrics[k, state, future_states]
 
         self.backward_metrics[k, state] = self.trellis.butterfly(backward_metrics, branch_metrics)
 
@@ -86,14 +88,25 @@ class SISODecoder:
 
         self.LLR[k] = np.max(positive) - np.max(negative)
 
-    def execute(self, tuples):
+    def execute(self, tuples, i=None):
         self.compute_branch(tuples)
 
         for k in range(1, self.block_size + 1):
             for state in range(0, 4):
                 self.compute_forward(k, state)
                 self.compute_backward(k, state)
-
+        if i==0:
+            print("tuples 0:", [tuples[k][0] for k in range(self.block_size)])
+            print("tuples 1:", [tuples[k][1] for k in range(self.block_size)])
+            print("tuples 2:", [tuples[k][2] for k in range(self.block_size)])
+            print("branch:", self.branch_metrics)
+            print("forward:", self.forward_metrics)
+            print("backward:", self.backward_metrics)
+        ''' 
+        for k in range(self.block_size, -1, -1):
+            for state in range(0, 4):
+                self.compute_backward(k, state)
+        '''
         for k in range(0, self.block_size):
             self.compute_LLR(k)
 
