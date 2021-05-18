@@ -28,8 +28,8 @@ module Siso(
 	// input           	        data_i;       [0:block_size-1];  
 	input  signed  [28-1:0]     sys_i;
 	input  signed  [28-1:0]     enc_i;
-	input  signed  [84-1:0]     ext_i;
-	output signed  [84-1:0]     data_o;
+	input  signed  [70-1:0]     ext_i;
+	output signed  [70-1:0]     data_o;
 	output                      finish;
 
 	/* =======================REG & wire================================ */
