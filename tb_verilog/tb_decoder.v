@@ -46,8 +46,8 @@ Decoder decorder0(
         .done_o(done_o)
     );       
    
-initial	$readmemh (`INPUT,  input_mem);
-initial	$readmemh (`EXPECT, out_mem);
+initial	$readmemb (`INPUT,  input_mem);
+initial	$readmemb (`EXPECT, out_mem);
 
 initial begin
     clk            = 1'b1;
