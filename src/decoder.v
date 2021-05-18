@@ -16,8 +16,8 @@ module Decoder(
       parameter block_size        = 21;            // 3 * (input_size + 2)
       parameter S_READ            = 2'd0;
       parameter S_DEC1            = 2'd1;
-      parameter S_DEC2            = 2'd3;
-      parameter S_ITER_FINISH     = 2'd4;
+      parameter S_DEC2            = 2'd2;
+      parameter S_ITER_FINISH     = 2'd3;
       // parameter S_DEC1_FINISH     = 3'd2;
       // parameter S_DEC2_FINISH     = 3'd4;
 
@@ -26,6 +26,7 @@ module Decoder(
       input   [83:0]              data_i;
       output  [4:0]               data_o;
       input                       start_i;
+      output                      done_o;
 
   /* =======================REG & wire================================ */
 
@@ -103,14 +104,26 @@ module Decoder(
       // middle connection
       wire    [9:0]               ITL2_i       [0:extend_size-1];
       wire    [9:0]               DITL1_i      [0:extend_size-1];
-      assign  ITL2_i  = siso1_o_2D - DITL1_o;
-      assign  DITL1_i = siso2_o_2D - ITL2_o;
+
+      generate
+        genvar o, p;
+        for ( o = 0; o < 4; o = o + 1 ) begin
+          for ( p = 0; p < 7; p = p + 1 ) begin
+            assign  ITL2_i[p][o]  = siso1_o_2D[p][o] - DITL1_o[p][o];
+            assign  DITL1_i[p][o] = siso2_o_2D[p][o] - ITL2_o[p][o];
+          end
+        end
+      endgenerate
+      // assign  ITL2_i  = siso1_o_2D - DITL1_o;
+      // assign  DITL1_i = siso2_o_2D - ITL2_o;
+
+      // output sampling
       assign  data_o[4] = DITL2_o[6][9] ? 0 : 1;
       assign  data_o[3] = DITL2_o[5][9] ? 0 : 1;
       assign  data_o[2] = DITL2_o[4][9] ? 0 : 1;      
       assign  data_o[1] = DITL2_o[3][9] ? 0 : 1; 
-      assign  data_o[0] = DITL2_o[2][9] ? 0 : 1;  
-      assign  done_o    = done;
+      assign  data_o[0] = DITL2_o[2][9] ? 0 : 1;
+      
       // state control signals
       reg     [3:0]               state;
       reg     [3:0]               state_nxt;
@@ -122,12 +135,14 @@ module Decoder(
       reg                         dec1_begin_nxt;
       reg                         dec1_finish;
       reg                         dec1_finish_nxt;
-      reg                         done;
-      reg                         done_nxt; 
       reg                         dec2_begin;
       reg                         dec2_begin_nxt;
       reg                         dec2_finish;
       reg                         dec2_finish_nxt;
+      reg                         done;
+      reg                         done_nxt; 
+
+      assign  done_o    = done;
       // reg                         iter_finish_w;
       // reg                         iter_finish_r;
       // reg                         begin_w;
@@ -135,24 +150,24 @@ module Decoder(
       
     Siso siso1(
       .clk_i(clk_p_i),
-      .rst_n_i(reset_n_i),
+      .reset_n_i(reset_n_i),
       .read_en_i(dec1_begin),
       .sys_i(sys1_i),
       .enc_i(enc1_i),
       .ext_i(ext1_i),
       .data_o(siso1_o),
-      .done(dec1_finish),
+      .finish(dec1_finish)
     );
 
     Siso siso2(
       .clk_i(clk_p_i),
-      .rst_n_i(reset_n_i),
+      .reset_n_i(reset_n_i),
       .read_en_i(dec2_begin),
       .sys_i(sys2_i),
       .enc_i(enc2_i),
       .ext_i(ext2_i),
       .data_o(siso2_o),
-      .done(dec2_finish),
+      .finish(dec2_finish)
     );
 
     // ITL1 7 bits 4 times, input: vec0, output: ITL1_o 
@@ -162,8 +177,8 @@ module Decoder(
           Interleaver ITL1(
             .clk_p_i(clk_p_i),
             .reset_n_i(reset_n_i),
-            .data_i(vec0[6:0][i]),
-            .data_o(ITL1_o[6:0][i]),
+            .data_i( { vec0[6][i], vec0[5][i], vec0[4][i], vec0[3][i], vec0[2][i], vec0[1][i], vec0[0][i]} ),
+            .data_o( { ITL1_o[6][i], ITL1_o[5][i], ITL1_o[4][i], ITL1_o[3][i], ITL1_o[2][i], ITL1_o[1][i], ITL1_o[0][i]} )
           );
         end 
     endgenerate
@@ -175,8 +190,8 @@ module Decoder(
           Interleaver ITL2(
             .clk_p_i(clk_p_i),
             .reset_n_i(reset_n_i),
-            .data_i(ITL2_i[6:0][j]),
-            .data_o(ITL2_o[6:0][j]),
+            .data_i( { ITL2_i[6][j], ITL2_i[5][j], ITL2_i[4][j], ITL2_i[3][j], ITL2_i[2][j], ITL2_i[1][j], ITL2_i[0][j]} ),
+            .data_o( { ITL2_o[6][j], ITL2_o[5][j], ITL2_o[4][j], ITL2_o[3][j], ITL2_o[2][j], ITL2_o[1][j], ITL2_o[0][j]} )
           );
         end 
     endgenerate
@@ -188,8 +203,8 @@ module Decoder(
           Interleaver ITL2(
             .clk_p_i(clk_p_i),
             .reset_n_i(reset_n_i),
-            .data_i(DITL1_i[6:0][k]),
-            .data_o(DITL1_o[6:0][k]),
+            .data_i( { DITL1_i[6][k], DITL1_i[5][k], DITL1_i[4][k], DITL1_i[3][k], DITL1_i[2][k], DITL1_i[1][k], DITL1_i[0][k]} ),
+            .data_o( { DITL1_o[6][k], DITL1_o[5][k], DITL1_o[4][k], DITL1_o[3][k], DITL1_o[2][k], DITL1_o[1][k], DITL1_o[0][k]} )
           );
         end 
     endgenerate
@@ -201,8 +216,8 @@ module Decoder(
           Interleaver ITL2(
             .clk_p_i(clk_p_i),
             .reset_n_i(reset_n_i),
-            .data_i(siso2_o_2D[6:0][l]),
-            .data_o(DITL2_o[6:0][l]),
+            .data_i( { siso2_o_2D[6][l], siso2_o_2D[5][l], siso2_o_2D[4][l], siso2_o_2D[3][l], siso2_o_2D[2][l], siso2_o_2D[1][l], siso2_o_2D[0][l]} ),
+            .data_o( { DITL2_o[6][l], DITL2_o[5][l], DITL2_o[4][l], DITL2_o[3][l], DITL2_o[2][l], DITL2_o[1][l], DITL2_o[0][l]} )
           );
         end 
     endgenerate
@@ -280,16 +295,18 @@ module Decoder(
 		endcase
   end
 
-  integer ii;
+  integer ii, jj;
   /* ====================Sequential Part=================== */
     always@(posedge clk_p_i or negedge reset_n_i)
     begin
-        if (reset_n_i == 1'b0)
+        if (reset_n_i == 1'b0) 
             begin
-                for ( ii = 0; ii < 4; ii = ii+1) begin
-                  vec0[0:extend_size-1][ii] <= 7'b0;
-                  vec1[0:extend_size-1][ii] <= 7'b0;
-                  vec2[0:extend_size-1][ii] <= 7'b0;
+                for ( ii = 0; ii < 4; ii = ii+1 ) begin
+                  for ( jj = 0; jj < 7; jj = jj+1 ) begin
+                    vec0[jj][ii] <= 7'b0;
+                    vec1[jj][ii] <= 7'b0;
+                    vec2[jj][ii] <= 7'b0;  
+                  end
                 end
 
                 sys1_i                      <= 28'b0;
@@ -320,9 +337,11 @@ module Decoder(
             begin
                 // read input
                 if (state == S_READ) begin
-                  vec0[0:extend_size-1][read_counter] <= vec0_nxt[0:extend_size-1];
-                  vec1[0:extend_size-1][read_counter] <= vec1_nxt[0:extend_size-1];
-                  vec2[0:extend_size-1][read_counter] <= vec2_nxt[0:extend_size-1];
+                  for ( jj = 0; jj < 7; jj = jj+1 ) begin
+                    vec0[jj][read_counter] <= vec0_nxt[jj];
+                    vec1[jj][read_counter] <= vec1_nxt[jj];
+                    vec2[jj][read_counter] <= vec2_nxt[jj];
+                  end
                 end
                 // calculate siso
                 else if (state == S_DEC1) begin

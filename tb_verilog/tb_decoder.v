@@ -45,16 +45,16 @@ initial	$readmemh (`INPUT,  input_mem);
 initial	$readmemh (`EXPECT, out_mem);
 
 initial begin
-    clk         = 1'b1;
-    rst         = 1'b1;
-    stop        = 1'b0;
-    counter     = 0;
-    iter        = 0;
-    err         = 1'd0;
-    over        = 1'b0;
-    pattern_num = 0; 
-    #2.5 reset=1'b0;                       
-    #2.5 reset=1'b1;
+    clk            = 1'b1;
+    rst            = 1'b1;
+    stop           = 1'b0;
+    counter        = 0;
+    iter           = 0;
+    err            = 1'd0;
+    over           = 1'b0;
+    pattern_num    = 0; 
+    #2.5 reset_n_i = 1'b0;                       
+    #2.5 reset_n_i = 1'b1;
 
 end
 
