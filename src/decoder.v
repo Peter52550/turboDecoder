@@ -129,8 +129,8 @@ module Decoder(
       // state control signals
       reg     [3:0]               state;
       reg     [3:0]               state_nxt;
-      reg     [1:0]               read_counter;     
-      reg     [1:0]               read_counter_nxt; 
+      reg     [2:0]               read_counter;     
+      reg     [2:0]               read_counter_nxt; 
       reg     [5:0]               iter_counter;
       reg     [5:0]               iter_counter_nxt;
       reg                         dec1_begin;
@@ -230,7 +230,7 @@ module Decoder(
   /* ====================Combinational Part================== */
   //next-state logic //todo
   always @(*) begin
-    // done_nxt = 0;
+    done_nxt = 0;
 		case(state)
       S_READ: begin
         // read 21 bits per cycle from data_i, read 4 times
