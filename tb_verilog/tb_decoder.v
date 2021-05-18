@@ -23,7 +23,8 @@ parameter INPUT_SIZE    = 4'd1;
 //         16'b0110_1010_0100_1100
 //     };
 
-reg           clk, rst, over, stop, start, done;
+reg           clk, rst, over, stop, start;
+wire          done_o;
 reg   [20:0]   data;
 wire  [4:0]  out;
 reg   [4:0]  out_temp;   
@@ -42,7 +43,7 @@ Decoder decorder0(
         .start_i(start),
         .data_i(data),
         .data_o(out),
-        .done_o(done)
+        .done_o(done_o)
     );       
    
 initial	$readmemh (`INPUT,  input_mem);
@@ -83,7 +84,7 @@ end
 
 always @(negedge clk)begin
     if(counter < INPUT_SIZE) begin
-        if(done) begin 
+        if(done_o) begin 
             start = 0;
             iter = 0;
             out_temp = out_mem[counter];
@@ -102,7 +103,7 @@ always @(negedge clk)begin
             end
         end
     end
-    else if(counter == INPUT_SIZE && done) begin
+    else if(counter == INPUT_SIZE && done_o) begin
         stop = 1'd1;
     end
     else begin                                  
@@ -112,7 +113,7 @@ always @(negedge clk)begin
 end
 
 always @(posedge clk)begin
-    if(done) begin
+    if(done_o) begin
         if(out !== out_temp) begin
             $display("ERROR at %d:output %d !=expect %d ", pattern_num, out, out_temp);
             $fdisplay(out_error_f, "ERROR at %d:output %h !=expect %h ",pattern_num, out, out_temp);

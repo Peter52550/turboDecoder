@@ -23,7 +23,7 @@ module Decoder(
 
       input                       clk_p_i;
       input                       reset_n_i;
-      input   [83:0]              data_i;
+      input   [20:0]              data_i;       // **here
       output  [4:0]               data_o;
       input                       start_i;
       output                      done_o;
@@ -52,8 +52,10 @@ module Decoder(
       reg     [27:0]              enc1_i_nxt;
       reg     [69:0]              ext1_i;
       reg     [69:0]              ext1_i_nxt;
-      reg     [69:0]              siso1_o;
-      reg     [69:0]              siso1_o_nxt;
+      // reg     [69:0]              siso1_o;
+      // reg     [69:0]              siso1_o_nxt;
+      wire        [69:0]           siso1_o;
+      
 
       wire    [9:0]               siso1_o_2D   [0:extend_size-1];
 
@@ -72,9 +74,9 @@ module Decoder(
       reg     [27:0]              enc2_i_nxt;
       reg     [69:0]              ext2_i;
       reg     [69:0]              ext2_i_nxt;
-      reg     [69:0]              siso2_o;
-      reg     [69:0]              siso2_o_nxt;
-
+      // reg     [69:0]              siso2_o;
+      // reg     [69:0]              siso2_o_nxt;
+    wire        [69:0]           siso2_o;
       wire    [9:0]               siso2_o_2D   [0:extend_size-1];
 
       assign  siso2_o_2D[6][9:0] = siso2_o[69:60];
@@ -133,12 +135,15 @@ module Decoder(
       reg     [5:0]               iter_counter_nxt;
       reg                         dec1_begin;
       reg                         dec1_begin_nxt;
-      reg                         dec1_finish;
-      reg                         dec1_finish_nxt;
+      // reg                         dec1_finish;
+      // reg                         dec1_finish_nxt;
+      wire                        dec1_finish;
+      
       reg                         dec2_begin;
       reg                         dec2_begin_nxt;
-      reg                         dec2_finish;
-      reg                         dec2_finish_nxt;
+      // reg                         dec2_finish;
+      // reg                         dec2_finish_nxt;
+      wire                        dec2_finish;
       reg                         done;
       reg                         done_nxt; 
 
@@ -312,19 +317,19 @@ module Decoder(
                 sys1_i                      <= 28'b0;
                 enc1_i                      <= 28'b0;
                 ext1_i                      <= 28'b0;
-                siso1_o                     <= 28'b0;
+                // siso1_o                     <= 28'b0;
                 sys2_i                      <= 28'b0;
                 enc2_i                      <= 28'b0;
                 ext2_i                      <= 28'b0;
-                siso2_o                     <= 28'b0;
+                // siso2_o                     <= 28'b0;
 
                 state                       <= S_READ;
                 read_counter                <= 2'b0;
                 iter_counter                <= 6'b0;
                 dec1_begin                  <= 1'b0;
-                dec1_finish                 <= 1'b0;
+                // dec1_finish                 <= 1'b0;
                 dec2_begin                  <= 1'b0;
-                dec2_finish                 <= 1'b0;
+                // dec2_finish                 <= 1'b0;
                 done                        <= 1'b0;
 
                 // begin_r         <= 1'd0;
@@ -348,22 +353,22 @@ module Decoder(
                   sys1_i                              <= sys1_i_nxt;
                   enc1_i                              <= enc1_i_nxt;
                   ext1_i                              <= ext1_i_nxt;
-                  siso1_o                             <= siso1_o_nxt;
+                  // siso1_o                             <= siso1_o_nxt;
                 end
                 else if (state == S_DEC2) begin
                   sys2_i                              <= sys2_i_nxt;
                   enc2_i                              <= enc2_i_nxt;
                   ext2_i                              <= ext2_i_nxt;
-                  siso2_o                             <= siso2_o_nxt;
+                  // siso2_o                             <= siso2_o_nxt;
                 end
 
                 state                                 <= state_nxt;
                 read_counter                          <= read_counter_nxt;
                 iter_counter                          <= iter_counter_nxt;
                 dec1_begin                            <= dec1_begin_nxt;
-                dec1_finish                           <= dec1_finish_nxt;
+                // dec1_finish                           <= dec1_finish_nxt;
                 dec2_begin                            <= dec2_begin_nxt;
-                dec2_finish                           <= dec2_finish_nxt;
+                // dec2_finish                           <= dec2_finish_nxt;
                 done                                  <= done_nxt;
                 // begin_r         <= begin_w;
                 // dec_finish_r    <= dec_finish_w;
