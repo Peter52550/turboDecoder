@@ -65,12 +65,27 @@ for n in range(num):
     #print("channel:", channel_vector)
     #print("new:", new_vector)
     reshuffled = np.concatenate((new_vector[::3], new_vector[1::3], new_vector[2::3]))
+    # print(new_vector[::3],new_vector[::3][::-1])
+
+    # reshuffle = np.zeros((1,84))
+    
     #print("output:", end=" ")
     
     with open(write_path, "a+") as f:
+        inputs = []
         for i in reshuffled:
             print(int(i), bins(int(i), 4))
-            print(bins(int(i), 4), end="", file=f)
+            inputs.append(bins(int(i), 4))
+        print(inputs)
+        text = ''
+        for i in range(4):
+            for string in inputs:
+                text = text + string[i]
+                # print(string)
+        print(text)
+        for i in text:
+            # print(bins(int(i), 4), end="", file=f)
+            print(i, end="", file=f)
         print()
         print(file=f)
 
