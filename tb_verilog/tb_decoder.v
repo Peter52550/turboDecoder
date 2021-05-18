@@ -94,8 +94,12 @@ always @(negedge clk)begin
             if(iter < 4) begin
                 start       = 1;
                 input_buffer= input_mem[(counter)];
-                data        = input_buffer[(counter+1)*21-1-:21];
+                data        = input_buffer[(iter+1)*21-1-:21];
                 iter        = iter+1;
+            end
+            else if(iter == 4) begin
+                start = 1;
+                iter = iter + 1;
             end
             else begin
                 start = 0;
