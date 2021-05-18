@@ -6,7 +6,7 @@
 module decoder_tb;
 
 parameter ITERATE       = 10'd16;
-parameter INPUT_SIZE    = 4'd10;
+parameter INPUT_SIZE    = 4'd1;
 
 // parameter  [15:0] data_arr [0:4] = '{
 //         16'b1111_0010_1100_1111,
@@ -24,15 +24,19 @@ parameter INPUT_SIZE    = 4'd10;
 //     };
 
 reg           clk, rst, over, stop, start, done;
-reg   [83:0]   data;
+reg   [20:0]   data;
 wire  [4:0]  out;
 reg   [4:0]  out_temp;   
 reg   [15:0]  err;
+reg   [83:0] input_buffer;
+reg   [83:0] input_mem	[0:INPUT_SIZE-1];
+reg   [4:0] out_mem	    [0:INPUT_SIZE-1];
 
-integer       iter, counter, process, pattern_num;
+
+integer       iter, counter, process, pattern_num, out_f, out_error_f;
 
 
-Decorder decorder0(
+Decoder decorder0(
         .reset_n_i(rst), 
         .clk_p_i(clk),
         .start_i(start),
@@ -53,8 +57,8 @@ initial begin
     err            = 1'd0;
     over           = 1'b0;
     pattern_num    = 0; 
-    #2.5 reset_n_i = 1'b0;                       
-    #2.5 reset_n_i = 1'b1;
+    #2.5 rst = 1'b0;                       
+    #2.5 rst = 1'b1;
 
 end
 
@@ -88,7 +92,8 @@ always @(negedge clk)begin
         else begin
             if(iter < 4) begin
                 start       = 1;
-                data        = input_mem[(counter+1)*21-1: counter*21-1];
+                input_buffer= input_mem[(counter)];
+                data        = input_buffer[(counter+1)*21-1-:21];
                 iter        = iter+1;
             end
             else begin

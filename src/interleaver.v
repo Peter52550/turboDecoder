@@ -13,7 +13,7 @@ module Interleaver(
 
   /* =======================REG & wire================================ */
         
-      assign data_o = { data_i[5], data_i[2], data_i[4], data_i[1], data_i[3], data_i[6], data_i[0] } 
+      assign data_o = { data_i[5], data_i[2], data_i[4], data_i[1], data_i[3], data_i[6], data_i[0] } ;
 
   /* ====================Combinational Part================== */
   //next-state logic //todo
@@ -21,33 +21,33 @@ module Interleaver(
     
 			  
   // output logic
-    always@ (*)
-      begin
+    // always@ (*)
+    //   begin
           
-      end
+    //   end
 
   // state transition
-    always@ (*)
-      begin
-          case(state_r)
+    // always@ (*)
+    //   begin
+    //       case(state_r)
            
-           default:
+    //        default:
         
-          endcase
-      end
+    //       endcase
+    //   end
    			  //todo
   /* ====================Sequential Part=================== */
-    always@(posedge clk_p_i or negedge reset_n_i)
-    begin
-        if (reset_n_i == 1'b0)
-            begin  
+    // always@(posedge clk_p_i or negedge reset_n_i)
+    // begin
+    //     if (reset_n_i == 1'b0)
+    //         begin  
                 
-            end
-        else
-            begin 
+    //         end
+    //     else
+    //         begin 
 
-            end
-    end
+    //         end
+    // end
   /* ====================================================== */
 
 endmodule
