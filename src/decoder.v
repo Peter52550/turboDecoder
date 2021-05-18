@@ -4,6 +4,7 @@ module Decoder(
              data_i,
              data_o,
              start_i,
+             done_o,
              );
 
   /*========================IO declaration============================ */	 
@@ -32,9 +33,9 @@ module Decoder(
       reg     [3:0]               vec0         [0:extend_size-1];
       reg     [3:0]               vec1         [0:extend_size-1];
       reg     [3:0]               vec2         [0:extend_size-1];
-      reg                         vec0_nxt     [0:extend_size-1];
-      reg                         vec1_nxt     [0:extend_size-1];
-      reg                         vec2_nxt     [0:extend_size-1];
+      reg     [extend_size-1:0]   vec0_nxt;
+      reg     [extend_size-1:0]   vec1_nxt;
+      reg     [extend_size-1:0]   vec2_nxt;
 
       wire    [27:0]              vec0_1D;
       wire    [27:0]              vec1_1D;
@@ -104,7 +105,12 @@ module Decoder(
       wire    [9:0]               DITL1_i      [0:extend_size-1];
       assign  ITL2_i  = siso1_o_2D - DITL1_o;
       assign  DITL1_i = siso2_o_2D - ITL2_o;
-      
+      assign  data_o[4] = DITL2_o[6][9] ? 0 : 1;
+      assign  data_o[3] = DITL2_o[5][9] ? 0 : 1;
+      assign  data_o[2] = DITL2_o[4][9] ? 0 : 1;      
+      assign  data_o[1] = DITL2_o[3][9] ? 0 : 1; 
+      assign  data_o[0] = DITL2_o[2][9] ? 0 : 1;  
+      assign  done_o    = done;
       // state control signals
       reg     [3:0]               state;
       reg     [3:0]               state_nxt;
@@ -116,6 +122,8 @@ module Decoder(
       reg                         dec1_begin_nxt;
       reg                         dec1_finish;
       reg                         dec1_finish_nxt;
+      reg                         done;
+      reg                         done_nxt; 
       reg                         dec2_begin;
       reg                         dec2_begin_nxt;
       reg                         dec2_finish;
@@ -216,6 +224,7 @@ module Decoder(
           // finish reading data_i
           if(read_counter == 4) begin
             state_nxt = S_DEC1;
+            dec1_begin_nxt = 1;
             read_counter_nxt = 0;
           end
         end
@@ -231,9 +240,13 @@ module Decoder(
         ext1_i_nxt = DITL1_o_1D;    // [69:0] first iter is 70'b0
         if ( dec1_finish == 1 ) begin
           state_nxt = S_DEC2;
+          dec1_begin_nxt = 0;
+          // done_nxt = 1;
+          dec2_begin_nxt = 1;
         end
         else begin
           state_nxt = S_DEC1;
+          // done_nxt = 0;
         end
       end
 
@@ -244,19 +257,24 @@ module Decoder(
         if ( dec2_finish == 1 ) begin
           if (iter_counter < MAX_ITER) begin
             state_nxt = S_DEC1;
+            dec2_begin_nxt = 0;
+            // done_nxt = 1;
+            dec1_begin_nxt = 1;
             iter_counter_nxt = iter_counter + 1;
           end
           else begin
             state_nxt = S_ITER_FINISH;
+            // done_nxt = 1;
           end
         end
         else begin
           state_nxt = S_DEC2;
+          // done_nxt = 0;
         end
       end
 
       S_ITER_FINISH: begin // todo calculate data_o from DITL2
-        
+        done_nxt = 1;
       end
 
 		endcase
@@ -290,6 +308,7 @@ module Decoder(
                 dec1_finish                 <= 1'b0;
                 dec2_begin                  <= 1'b0;
                 dec2_finish                 <= 1'b0;
+                done                        <= 1'b0;
 
                 // begin_r         <= 1'd0;
                 // dec_finish_r    <= 1'd0;
@@ -326,7 +345,7 @@ module Decoder(
                 dec1_finish                           <= dec1_finish_nxt;
                 dec2_begin                            <= dec2_begin_nxt;
                 dec2_finish                           <= dec2_finish_nxt;
-
+                done                                  <= done_nxt;
                 // begin_r         <= begin_w;
                 // dec_finish_r    <= dec_finish_w;
                 // iter_finish_r   <= iter_finish_w;

@@ -33,12 +33,12 @@ integer       iter, counter, process, pattern_num;
 
 
 Decorder decorder0(
-        .i_rst_n(rst), 
-        .i_clk(clk),
-        .i_start(start),
-        .i_data(data),
-        .o_data(out)
-        .done(done)
+        .reset_n_i(rst), 
+        .clk_p_i(clk),
+        .start_i(start),
+        .data_i(data),
+        .data_o(out),
+        .done_o(done)
     );       
    
 initial	$readmemh (`INPUT,  input_mem);
@@ -61,8 +61,9 @@ end
 always begin #(`CYCLE/2) clk = ~clk; end
 
 initial begin
-	$dumpfile("decoder.fsdb");
-	$dumpvars;
+	$fsdbDumpfile("decoder.fsdb");
+    $fsdbDumpvars("+mda");
+	// $dumpvars;
     out_f = $fopen("out.dat");
     out_error_f = $fopen("out_error.dat");
     if (out_f == 0) begin
@@ -78,25 +79,30 @@ end
 
 always @(negedge clk)begin
     if(counter < INPUT_SIZE) begin
-        if(iter < 4) begin
-            start       = 1;
-            data        = input_mem[(counter+1)*21: counter*21];
-            iter        = iter+1;
-            counter     = counter+1;
+        if(done) begin 
+            start = 0;
+            iter = 0;
+            out_temp = out_mem[counter];
+            counter = counter + 1;
         end
         else begin
-            start = 0;
+            if(iter < 4) begin
+                start       = 1;
+                data        = input_mem[(counter+1)*21-1: counter*21-1];
+                iter        = iter+1;
+            end
+            else begin
+                start = 0;
+                iter  = 0;
+            end
         end
-        out_temp        = out_mem[counter];
-        if(done) begin
-            counter  = counter + 1;
-            iter = 0;
-        end
+    end
+    else if(counter == INPUT_SIZE && done) begin
+        stop = 1'd1;
     end
     else begin                                  
        iter = 0;
        counter = 0;
-       stop = 1'd1;
     end
 end
 
