@@ -59,7 +59,7 @@ initial begin
     over           = 1'b0;
     pattern_num    = 0; 
     #2.5 rst = 1'b0;                       
-    #2.5 rst = 1'b1;
+    #7.5 rst = 1'b1;
 
 end
 

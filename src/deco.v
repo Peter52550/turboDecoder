@@ -26,7 +26,7 @@ module Deco(
 
     wire    [27:0]              vec0_1D;
     wire    [27:0]              vec1_1D;
-    wire    [27:0]              vec2_1D;
+    wire    [69:0]              vec2_1D;
 
     wire    [69:0]              ext_i;
     reg     [27:0]              sys_reg;
@@ -59,7 +59,7 @@ module Deco(
     reg                         dec1_begin;
     reg                         dec1_begin_nxt;
     wire                        dec1_finish;
-
+    reg                         start_reg;
     reg                         done;
     reg                         done_nxt; 
 
@@ -90,7 +90,7 @@ module Deco(
         done_nxt = done;
         case(state) 
             S_READ: begin
-                if(start_i == 1) begin
+                if(start_reg == 1) begin
                     if(read_counter < 4) begin
                         for(i=0;i<7;i=i+1) begin
                             vec0[i][read_counter] = vec0_reg[6-i];
@@ -113,24 +113,24 @@ module Deco(
                 end
                 else begin
                     read_counter_nxt = 0;
-                    dec1_begin_nxt = 1;
+                    dec1_begin_nxt = 0;
                     state_nxt = S_READ;
                     iter_counter_nxt = iter_counter;
                 end
             end 
             S_DEC1: begin
                 if(dec1_finish == 1) begin
-                    sys_reg  = {vec0[0][3:0], vec0[4][3:0], vec0[2][3:0], vec0[1][3:0], vec0[3][3:0], vec0[5][3:0], vec0[6][3:0]};
+                    sys_reg  = {vec0[0][3:0], vec0[4][3:0], vec0[2][3:0], vec0[1][3:0], vec0[3][3:0], 4'b0, 4'b0};
                     enc_reg  = {vec2[0][3:0], vec2[1][3:0], vec2[2][3:0], vec2[3][3:0], vec2[4][3:0], vec2[5][3:0], vec2[6][3:0]};
                     temp_LLR1_nxt[69:60] = siso1_o[69:60] - temp_LLR[69:60] - 2*vec0[0];
-                    temp_LLR1_nxt[59:50] = siso1_o[59:50] - temp_LLR[59:50] - 2*vec0[4];
+                    temp_LLR1_nxt[59:50] = siso1_o[29:20] - temp_LLR[29:20] - 2*vec0[4];
                     temp_LLR1_nxt[49:40] = siso1_o[49:40] - temp_LLR[49:40] - 2*vec0[2];
-                    temp_LLR1_nxt[39:30] = siso1_o[39:30] - temp_LLR[39:30] - 2*vec0[1];
-                    temp_LLR1_nxt[29:20] = siso1_o[29:20] - temp_LLR[29:20] - 2*vec0[3];
-                    temp_LLR1_nxt[19:10] = siso1_o[19:10] - temp_LLR[19:10] - 10'b0;
-                    temp_LLR1_nxt[9:0] = siso1_o[9:0] - temp_LLR[9:0] - 10'b0;
+                    temp_LLR1_nxt[39:30] = siso1_o[59:50] - temp_LLR[59:50] - 2*vec0[1];
+                    temp_LLR1_nxt[29:20] = siso1_o[39:30] - temp_LLR[39:30] - 2*vec0[3];
+                    temp_LLR1_nxt[19:10] = 10'b0;
+                    temp_LLR1_nxt[9:0] = 10'b0;
                     ext_reg  = temp_LLR1_nxt;
-                    
+
                     read_counter_nxt = 0;
                     dec1_begin_nxt = 1;
                     state_nxt = S_DEC2;
@@ -148,12 +148,13 @@ module Deco(
                     sys_reg = {vec0[0][3:0], vec0[1][3:0], vec0[2][3:0], vec0[3][3:0], vec0[4][3:0], vec0[5][3:0], vec0[6][3:0]};
                     enc_reg = {vec1[0][3:0], vec1[1][3:0], vec1[2][3:0], vec1[3][3:0], vec1[4][3:0], vec1[5][3:0], vec1[6][3:0]};
                     temp_LLR_nxt[69:60] = siso1_o[69:60] - temp_LLR1[69:60] - 2*vec0[0];
-                    temp_LLR_nxt[59:50] = siso1_o[59:50] - temp_LLR1[59:50] - 2*vec0[1];
+                    temp_LLR_nxt[59:50] = siso1_o[39:30] - temp_LLR1[39:30] - 2*vec0[1];
                     temp_LLR_nxt[49:40] = siso1_o[49:40] - temp_LLR1[49:40] - 2*vec0[2];
-                    temp_LLR_nxt[39:30] = siso1_o[39:30] - temp_LLR1[39:30] - 2*vec0[3];
-                    temp_LLR_nxt[29:20] = siso1_o[29:20] - temp_LLR1[29:20] - 2*vec0[4];
-                    temp_LLR_nxt[19:10] = siso1_o[19:10] - temp_LLR1[19:10] - 10'b0;
-                    temp_LLR_nxt[9:0] = siso1_o[9:0] - temp_LLR1[9:0] - 10'b0;
+                    temp_LLR_nxt[39:30] = siso1_o[29:20] - temp_LLR1[29:20] - 2*vec0[3];
+                    temp_LLR_nxt[29:20] = siso1_o[59:50] - temp_LLR1[59:50] - 2*vec0[4];
+                    temp_LLR_nxt[19:10] = 10'b0;
+                    temp_LLR_nxt[9:0] = 10'b0;
+                    
                     ext_reg  = temp_LLR_nxt;
                     read_counter_nxt = 0;
                     if(iter_counter != MAX_ITER) begin
@@ -198,6 +199,7 @@ module Deco(
             iter_counter <= 0;
             read_counter <= 0;
             dec1_begin <= 0;
+            start_reg <= 0;
         end
         else begin 
             state <= state_nxt;
@@ -213,6 +215,7 @@ module Deco(
             iter_counter <= iter_counter_nxt;
             read_counter <= read_counter_nxt;
             dec1_begin <= dec1_begin_nxt;
+            start_reg <= start_i;
         end
 	end
 endmodule
