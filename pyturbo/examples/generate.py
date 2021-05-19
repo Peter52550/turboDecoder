@@ -74,7 +74,7 @@ for n in range(num):
     with open(write_path, "a+") as f:
         inputs = []
         for i in reshuffled:
-            print(int(i), bins(int(i), 4))
+            # print(int(i), bins(int(i), 4))
             inputs.append(bins(int(i), 4))
         print(inputs)
         text = ''
@@ -82,7 +82,7 @@ for n in range(num):
             for string in inputs:
                 text = text + string[i]
                 # print(string)
-        print(text)
+        print(text, " ", text[0:21], " ", text[21:42], " ", text[42:63], " ", text[63:84])
         for i in text:
             # print(bins(int(i), 4), end="", file=f)
             print(i, end="", file=f)

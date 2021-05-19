@@ -99,9 +99,9 @@ class SISODecoder:
             print("tuples 0:", [tuples[k][0] for k in range(self.block_size)])
             print("tuples 1:", [tuples[k][1] for k in range(self.block_size)])
             print("tuples 2:", [tuples[k][2] for k in range(self.block_size)])
-            print("branch:", self.branch_metrics)
-            print("forward:", self.forward_metrics)
-            print("backward:", self.backward_metrics)
+            # print("branch:", self.branch_metrics)
+            # print("forward:", self.forward_metrics)
+            # print("backward:", self.backward_metrics)
         ''' 
         for k in range(self.block_size, -1, -1):
             for state in range(0, 4):
