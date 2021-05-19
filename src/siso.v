@@ -143,6 +143,9 @@ module Siso(
 						
 						state_nxt = BRANCH;
 					end
+					else begin
+						state_nxt = READ_DATA;
+					end
 			end
 			BRANCH: begin
 				for(k=0;k<extend_size;k=k+1) begin

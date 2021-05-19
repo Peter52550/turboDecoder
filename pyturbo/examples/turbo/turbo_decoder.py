@@ -52,28 +52,28 @@ class TurboDecoder:
         input_tuples = self.demultiplex(vector[::3], vector[1::3], self.LLR_ext)
         print("input_tuples", input_tuples)
         LLR_1 = self.decoders[0].execute(input_tuples, i)
-        if i==0:
-            print("LLR_1", LLR_1, "self.LLR_ext", self.LLR_ext, "2 * vector[::3]", 2 * vector[::3], [bins(int(i), 10) for i in LLR_1])
+        # if i==0:
+        print("LLR_1", LLR_1, "self.LLR_ext", self.LLR_ext, "2 * vector[::3]", 2 * vector[::3], [bins(int(i), 10) for i in LLR_1])
         LLR_1 = LLR_1 - self.LLR_ext - 2 * vector[::3]
-        if(i==0):
-            print("LLR_1", LLR_1)
+        # if(i==0):
+        print("LLR_1", LLR_1)
         LLR_interleaved = self.interleave(LLR_1)
-        if(i==0):
-            print("LLR_interleaved", LLR_interleaved)
+        # if(i==0):
+        print("LLR_interleaved", LLR_interleaved)
         input_interleaved = self.interleave(vector[::3])
-        if(i==0):
-            print("input_interleaved", input_interleaved, [bins(int(i), 4) for i in input_interleaved])
+        # if(i==0):
+        print("input_interleaved", input_interleaved, [bins(int(i), 4) for i in input_interleaved])
         input_tuples = self.demultiplex(input_interleaved, vector[2::3], LLR_interleaved)
 
         LLR_2 = self.decoders[1].execute(input_tuples)
-        if(i==0):
-            print("LLR_2", LLR_2,"LLR_interleaved", LLR_interleaved, " 2 * input_interleaved",  2 * input_interleaved)
+        # if(i==0):
+        print("LLR_2", LLR_2,"LLR_interleaved", LLR_interleaved, " 2 * input_interleaved",  2 * input_interleaved)
         LLR_2 = LLR_2 - LLR_interleaved - 2 * input_interleaved
-        if(i==0):
-            print("LLR_2", LLR_2)
+        # if(i==0):
+        print("LLR_2", LLR_2)
         self.LLR_ext = self.deinterleave(LLR_2)
-        if(i==0):
-            print("LLR_ext", self.LLR_ext)
+        # if(i==0):
+        print("LLR_ext", self.LLR_ext)
         return self.early_exit(LLR_1, self.LLR_ext)
 
     def execute(self, vector):
