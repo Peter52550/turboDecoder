@@ -59,7 +59,7 @@ for n in range(num):
     new_vector = convert(channel_vector, bits, boundary)
     #print(new_vector)
     new_vector = np.array([round(i*7) for i in new_vector])
-    #print(new_vector)
+    print("new_vector", new_vector)
     #print("input:", input_vector)
     #print("encoded", encoded_vector)
     #print("channel:", channel_vector)
