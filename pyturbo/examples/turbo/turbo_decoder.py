@@ -6,7 +6,9 @@ import numpy as np
 
 from .siso_decoder import SISODecoder
 
-
+def bins(n, bits):
+    s = bin(n & int("1"*bits, 2))[2:]
+    return ("{0:0>%s}" % (bits)).format(s)
 class TurboDecoder:
     @staticmethod
     def demultiplex(a, b, extrinsic):
@@ -51,7 +53,7 @@ class TurboDecoder:
         print("input_tuples", input_tuples)
         LLR_1 = self.decoders[0].execute(input_tuples, i)
         if i==0:
-            print("LLR_1", LLR_1, "self.LLR_ext", self.LLR_ext, "2 * vector[::3]", 2 * vector[::3])
+            print("LLR_1", LLR_1, "self.LLR_ext", self.LLR_ext, "2 * vector[::3]", 2 * vector[::3], [bins(int(i), 10) for i in LLR_1])
         LLR_1 = LLR_1 - self.LLR_ext - 2 * vector[::3]
         if(i==0):
             print("LLR_1", LLR_1)
@@ -60,7 +62,7 @@ class TurboDecoder:
             print("LLR_interleaved", LLR_interleaved)
         input_interleaved = self.interleave(vector[::3])
         if(i==0):
-            print("input_interleaved", input_interleaved)
+            print("input_interleaved", input_interleaved, [bins(int(i), 4) for i in input_interleaved])
         input_tuples = self.demultiplex(input_interleaved, vector[2::3], LLR_interleaved)
 
         LLR_2 = self.decoders[1].execute(input_tuples)
