@@ -1,3 +1,24 @@
+module over(a, b, result);
+	parameter WIDTH = 10;
+	parameter MSB   = WIDTH-1;
+	parameter neg 	= {1'b1, {(WIDTH-1){1'b0}}};
+	parameter pos 	= {1'b0, {(WIDTH-1){1'b1}}};
+	input signed [WIDTH-1:0] a, b;
+	output reg signed [WIDTH-1:0] result;
+
+	reg signed [WIDTH-1:0] temp;
+	reg overflow, underflow;
+	reg extra;
+
+	always @* begin
+		{extra, temp} = {a[MSB], a} + {b[MSB], b};
+		overflow  = ({extra, temp[MSB]} == 2'b01) ? 1'b1 : 1'b0;
+		underflow = ({extra, temp[MSB]} == 2'b10) ? 1'b1 : 1'b0;
+		result = 	(overflow) 	? pos : 
+					(underflow)	? neg : temp;
+	end
+endmodule
+
 module Siso(
 						 clk_i,
 						 reset_n_i,
@@ -40,6 +61,9 @@ module Siso(
 	reg signed	[data_size-1:0]	branch_metrics 			[0:extend_size-1] [0:3] [0:3];  // +-128
 	reg signed	[data_size-1:0]	forward_metrics 		[0:extend_size  ] [0:3];
 	reg signed	[data_size-1:0]	backward_metrics 		[0:extend_size  ] [0:3];
+	wire signed	[data_size-1:0]	forward_sum				[0:extend_size-1] [0:7];
+	wire signed	[data_size-1:0]	backward_sum			[0:extend_size-1] [0:7];
+	wire signed	[data_size-1:0]	LLR_sum					[0:extend_size-1] [0:7];
 	reg signed  [3:0]	          sys                 [0:extend_size-1];
 	reg signed  [3:0]	          enc                 [0:extend_size-1];
 	reg signed  [data_size-1:0]	ext                 [0:extend_size-1];
@@ -50,11 +74,41 @@ module Siso(
 	reg signed  [data_size-1:0] max_negative, max_positive, temp_positive_1,temp_positive_2, temp_negative_1, temp_negative_2; 
 	/* ====================Combinational Part================== */
 
+	assign data_o = {LLR[0], LLR[1], LLR[2], LLR[3], LLR[4], LLR[5], LLR[6]};
+
 	integer k;
-	genvar j;
+	genvar j, l, m;
 	generate
 		for(j=0;j<extend_size;j=j+1) begin
 			assign data_o[j] = LLR[j]; 
+		end
+		for(l=1;l<=extend_size;l=l+1) begin
+			over f0(.a(forward_metrics[l-1][0]), .b(branch_metrics[l-1][0][0]), .result(forward_sum[l-1][0]) );
+			over f1(.a(forward_metrics[l-1][1]), .b(branch_metrics[l-1][1][0]), .result(forward_sum[l-1][1]) );
+			over f2(.a(forward_metrics[l-1][2]), .b(branch_metrics[l-1][2][1]), .result(forward_sum[l-1][2]) );
+			over f3(.a(forward_metrics[l-1][3]), .b(branch_metrics[l-1][3][1]), .result(forward_sum[l-1][3]) );
+			over f4(.a(forward_metrics[l-1][0]), .b(branch_metrics[l-1][0][2]), .result(forward_sum[l-1][4]) );
+			over f5(.a(forward_metrics[l-1][1]), .b(branch_metrics[l-1][1][2]), .result(forward_sum[l-1][5]) );
+			over f6(.a(forward_metrics[l-1][2]), .b(branch_metrics[l-1][2][3]), .result(forward_sum[l-1][6]) );
+			over f7(.a(forward_metrics[l-1][3]), .b(branch_metrics[l-1][3][3]), .result(forward_sum[l-1][7]) );
+			over b0(.a(backward_metrics[l-1][0]), .b(branch_metrics[extend_size-l][0][0]), .result(backward_sum[l-1][0]) );
+			over b1(.a(backward_metrics[l-1][2]), .b(branch_metrics[extend_size-l][0][2]), .result(backward_sum[l-1][1]) );
+			over b2(.a(backward_metrics[l-1][0]), .b(branch_metrics[extend_size-l][1][0]), .result(backward_sum[l-1][2]) );
+			over b3(.a(backward_metrics[l-1][2]), .b(branch_metrics[extend_size-l][1][2]), .result(backward_sum[l-1][3]) );
+			over b4(.a(backward_metrics[l-1][1]), .b(branch_metrics[extend_size-l][2][1]), .result(backward_sum[l-1][4]) );
+			over b5(.a(backward_metrics[l-1][3]), .b(branch_metrics[extend_size-l][2][3]), .result(backward_sum[l-1][5]) );
+			over b6(.a(backward_metrics[l-1][1]), .b(branch_metrics[extend_size-l][3][1]), .result(backward_sum[l-1][6]) );
+			over b7(.a(backward_metrics[l-1][3]), .b(branch_metrics[extend_size-l][3][3]), .result(backward_sum[l-1][7]) );
+		end
+		for(m=0;m<extend_size;m=m+1) begin
+			over LLR0(.a(forward_sum[m][0]), .b(backward_metrics[extend_size-m-1][0]), .result(LLR_sum[m][0]) );
+			over LLR1(.a(forward_sum[m][5]), .b(backward_metrics[extend_size-m-1][2]), .result(LLR_sum[m][1]) );
+			over LLR2(.a(forward_sum[m][2]), .b(backward_metrics[extend_size-m-1][1]), .result(LLR_sum[m][2]) );
+			over LLR3(.a(forward_sum[m][7]), .b(backward_metrics[extend_size-m-1][3]), .result(LLR_sum[m][3]) );
+			over LLR4(.a(forward_sum[m][4]), .b(backward_metrics[extend_size-m-1][2]), .result(LLR_sum[m][4]) );
+			over LLR5(.a(forward_sum[m][1]), .b(backward_metrics[extend_size-m-1][0]), .result(LLR_sum[m][5]) );
+			over LLR6(.a(forward_sum[m][6]), .b(backward_metrics[extend_size-m-1][3]), .result(LLR_sum[m][6]) );
+			over LLR7(.a(forward_sum[m][3]), .b(backward_metrics[extend_size-m-1][1]), .result(LLR_sum[m][7]) );
 		end
 	endgenerate
 
@@ -79,13 +133,13 @@ module Siso(
 						enc[1] = enc_i[23:20];
 						enc[0] = enc_i[27:24];
 
-						ext[6] = 0;//ext_i[9:0];
-						ext[5] = 0;//ext_i[19:10];
-						ext[4] = 0;//ext_i[29:20];
-						ext[3] = 0;//ext_i[39:30];
-						ext[2] = 0;//ext_i[49:40];
-						ext[1] = 0;//ext_i[59:50];
-						ext[0] = 0;//ext_i[69:60];
+						ext[6] = ext_i[9:0];
+						ext[5] = ext_i[19:10];
+						ext[4] = ext_i[29:20];
+						ext[3] = ext_i[39:30];
+						ext[2] = ext_i[49:40];
+						ext[1] = ext_i[59:50];
+						ext[0] = ext_i[69:60];
 						
 						state_nxt = BRANCH;
 					end
@@ -109,10 +163,10 @@ module Siso(
 				forward_metrics[0][2] = neg_inf;
 				forward_metrics[0][3] = neg_inf;
 				for(k=1;k<=extend_size;k=k+1) begin
-					forward_metrics[k][0] = (forward_metrics[k-1][0]+branch_metrics[k-1][0][0] > forward_metrics[k-1][1]+branch_metrics[k-1][1][0]) ? forward_metrics[k-1][0]+branch_metrics[k-1][0][0] : forward_metrics[k-1][1]+branch_metrics[k-1][1][0];
-					forward_metrics[k][1] = (forward_metrics[k-1][2]+branch_metrics[k-1][2][1] > forward_metrics[k-1][3]+branch_metrics[k-1][3][1]) ? forward_metrics[k-1][2]+branch_metrics[k-1][2][1] : forward_metrics[k-1][3]+branch_metrics[k-1][3][1];
-					forward_metrics[k][2] = (forward_metrics[k-1][0]+branch_metrics[k-1][0][2] > forward_metrics[k-1][1]+branch_metrics[k-1][1][2]) ? forward_metrics[k-1][0]+branch_metrics[k-1][0][2] : forward_metrics[k-1][1]+branch_metrics[k-1][1][2];
-					forward_metrics[k][3] = (forward_metrics[k-1][2]+branch_metrics[k-1][2][3] > forward_metrics[k-1][3]+branch_metrics[k-1][3][3]) ? forward_metrics[k-1][2]+branch_metrics[k-1][2][3] : forward_metrics[k-1][3]+branch_metrics[k-1][3][3];
+					forward_metrics[k][0] = (forward_sum[k-1][0] > forward_sum[k-1][1]) ? forward_sum[k-1][0] : forward_sum[k-1][1];
+					forward_metrics[k][1] = (forward_sum[k-1][2] > forward_sum[k-1][3]) ? forward_sum[k-1][2] : forward_sum[k-1][3];
+					forward_metrics[k][2] = (forward_sum[k-1][4] > forward_sum[k-1][5]) ? forward_sum[k-1][4] : forward_sum[k-1][5];
+					forward_metrics[k][3] = (forward_sum[k-1][6] > forward_sum[k-1][7]) ? forward_sum[k-1][6] : forward_sum[k-1][7];
 				end
 				state_nxt = BACKWARD;
 			end
@@ -122,23 +176,23 @@ module Siso(
 				backward_metrics[0][2] = neg_inf;      //backward_metrics[extend_size][2] = neg_inf;
 				backward_metrics[0][3] = neg_inf;      //backward_metrics[extend_size][3] = neg_inf;
 				for(k=1;k<=extend_size;k=k+1) begin    //for(k=extend_size-1;k>=0;k=k-1) begin
-					backward_metrics[k][0] = (backward_metrics[k-1][0]+branch_metrics[extend_size-k][0][0] > backward_metrics[k-1][2]+branch_metrics[extend_size-k][0][2]) ? backward_metrics[k-1][0]+branch_metrics[extend_size-k][0][0] : backward_metrics[k-1][2]+branch_metrics[extend_size-k][0][2];//backward_metrics[k][0] = (backward_metrics[k+1][0]+branch_metrics[k][0][0] > backward_metrics[k+1][2]+branch_metrics[k][0][2]) ? backward_metrics[k+1][0]+branch_metrics[k][0][0] : backward_metrics[k+1][2]+branch_metrics[k][0][2];
-					backward_metrics[k][1] = (backward_metrics[k-1][0]+branch_metrics[extend_size-k][1][0] > backward_metrics[k-1][2]+branch_metrics[extend_size-k][1][2]) ? backward_metrics[k-1][0]+branch_metrics[extend_size-k][1][0] : backward_metrics[k-1][2]+branch_metrics[extend_size-k][1][2];//backward_metrics[k][1] = (backward_metrics[k+1][0]+branch_metrics[k][1][0] > backward_metrics[k+1][2]+branch_metrics[k][1][2]) ? backward_metrics[k+1][0]+branch_metrics[k][1][0] : backward_metrics[k+1][2]+branch_metrics[k][1][2];
-					backward_metrics[k][2] = (backward_metrics[k-1][1]+branch_metrics[extend_size-k][2][1] > backward_metrics[k-1][3]+branch_metrics[extend_size-k][2][3]) ? backward_metrics[k-1][1]+branch_metrics[extend_size-k][2][1] : backward_metrics[k-1][3]+branch_metrics[extend_size-k][2][3];//backward_metrics[k][2] = (backward_metrics[k+1][1]+branch_metrics[k][2][1] > backward_metrics[k+1][3]+branch_metrics[k][2][3]) ? backward_metrics[k+1][1]+branch_metrics[k][2][1] : backward_metrics[k+1][3]+branch_metrics[k][2][3];
-					backward_metrics[k][3] = (backward_metrics[k-1][1]+branch_metrics[extend_size-k][3][1] > backward_metrics[k-1][3]+branch_metrics[extend_size-k][3][3]) ? backward_metrics[k-1][1]+branch_metrics[extend_size-k][3][1] : backward_metrics[k-1][3]+branch_metrics[extend_size-k][3][3];//backward_metrics[k][3] = (backward_metrics[k+1][1]+branch_metrics[k][3][1] > backward_metrics[k+1][3]+branch_metrics[k][3][3]) ? backward_metrics[k+1][1]+branch_metrics[k][3][1] : backward_metrics[k+1][3]+branch_metrics[k][3][3];
+					backward_metrics[k][0] = (backward_sum[k-1][0] > backward_sum[k-1][1]) ? backward_sum[k-1][0] : backward_sum[k-1][1];
+					backward_metrics[k][1] = (backward_sum[k-1][2] > backward_sum[k-1][3]) ? backward_sum[k-1][2] : backward_sum[k-1][3];
+					backward_metrics[k][2] = (backward_sum[k-1][4] > backward_sum[k-1][5]) ? backward_sum[k-1][4] : backward_sum[k-1][5];
+					backward_metrics[k][3] = (backward_sum[k-1][6] > backward_sum[k-1][7]) ? backward_sum[k-1][6] : backward_sum[k-1][7];
 				end
 				state_nxt = LLR_COMPUTE;
 			end
 			LLR_COMPUTE: begin
 				for(k=0;k<extend_size;k=k+1) begin
-					negative[1] = forward_metrics[k][0] + branch_metrics[k][0][0] + backward_metrics[extend_size-k-1][0];
-					negative[2] = forward_metrics[k][1] + branch_metrics[k][1][2] + backward_metrics[extend_size-k-1][2];
-					negative[3] = forward_metrics[k][2] + branch_metrics[k][2][1] + backward_metrics[extend_size-k-1][1];
-					negative[0] = forward_metrics[k][3] + branch_metrics[k][3][3] + backward_metrics[extend_size-k-1][3];
-					positive[1] = forward_metrics[k][0] + branch_metrics[k][0][2] + backward_metrics[extend_size-k-1][2];
-					positive[2] = forward_metrics[k][1] + branch_metrics[k][1][0] + backward_metrics[extend_size-k-1][0];
-					positive[3] = forward_metrics[k][2] + branch_metrics[k][2][3] + backward_metrics[extend_size-k-1][3];
-					positive[0] = forward_metrics[k][3] + branch_metrics[k][3][1] + backward_metrics[extend_size-k-1][1];
+					negative[1] = LLR_sum[k][0];
+					negative[2] = LLR_sum[k][1];
+					negative[3] = LLR_sum[k][2];
+					negative[0] = LLR_sum[k][3];
+					positive[1] = LLR_sum[k][4];
+					positive[2] = LLR_sum[k][5];
+					positive[3] = LLR_sum[k][6];
+					positive[0] = LLR_sum[k][7];
 					temp_positive_1 = (positive[1]>positive[2]) ? positive[1] : positive[2];
 					temp_positive_2 = (positive[3]>positive[0]) ? positive[3] : positive[0];
 					max_positive = (temp_positive_1>temp_positive_2) ? temp_positive_1 : temp_positive_2;
