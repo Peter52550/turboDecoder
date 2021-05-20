@@ -58,30 +58,46 @@ module Siso(
 	reg                         done, done_nxt;
 	assign finish = done;
 
+	reg signed  [3:0]	        sys                 	[0:extend_size-1];
+	reg signed  [3:0]	        enc                 	[0:extend_size-1];
+	reg signed  [data_size-1:0]	ext                 	[0:extend_size-1];
+	reg signed	[3:0]	        sys_neg               	[0:extend_size-1];
+	reg signed	[3:0]	        enc_neg              	[0:extend_size-1];
+	reg signed	[data_size-1:0]	ext_neg                 [0:extend_size-1];
+	reg signed	[data_size-1:0]	sys_enc                 [0:extend_size-1] [0:3];
+
 	reg signed	[data_size-1:0]	branch_metrics 			[0:extend_size-1] [0:3] [0:3];  // +-128
 	reg signed	[data_size-1:0]	forward_metrics 		[0:extend_size  ] [0:3];
 	reg signed	[data_size-1:0]	backward_metrics 		[0:extend_size  ] [0:3];
+	reg signed	[data_size-1:0]	LLR             		[0:extend_size-1];
+	wire signed	[data_size-1:0]	branch_sum				[0:extend_size-1] [0:3];
 	wire signed	[data_size-1:0]	forward_sum				[0:extend_size-1] [0:7];
 	wire signed	[data_size-1:0]	backward_sum			[0:extend_size-1] [0:7];
 	wire signed	[data_size-1:0]	LLR_sum					[0:extend_size-1] [0:7];
-	reg signed  [3:0]	          sys                 [0:extend_size-1];
-	reg signed  [3:0]	          enc                 [0:extend_size-1];
-	reg signed  [data_size-1:0]	ext                 [0:extend_size-1];
 
-	reg signed	[data_size-1:0]	LLR             		[0:extend_size-1];
 	reg signed  [data_size-1:0] negative            [0:3];    
 	reg signed  [data_size-1:0] positive            [0:3];  
-	reg signed  [data_size-1:0] max_negative, max_positive, temp_positive_1,temp_positive_2, temp_negative_1, temp_negative_2; 
+	reg signed  [data_size-1:0] max_negative, max_positive, temp_positive_1,temp_positive_2, temp_negative_1, temp_negative_2;
+
+	integer k, n; 
 	/* ====================Combinational Part================== */
 
 	assign data_o = {LLR[0], LLR[1], LLR[2], LLR[3], LLR[4], LLR[5], LLR[6]};
 
-	integer k;
+	always@(*) begin
+		for(n=0;n<extend_size;n=n+1) begin
+			sys_neg[n] = ~sys[n] + 1;
+			enc_neg[n] = ~enc[n] + 1;
+			ext_neg[n] = ~ext[n] + 1;
+			sys_enc[n][0] = sys[n] + enc[n];
+			sys_enc[n][1] = sys[n] - enc[n];
+			sys_enc[n][2] = -sys[n] + enc[n];
+			sys_enc[n][3] = -sys[n] - enc[n];
+		end
+	end
+	
 	genvar j, l, m;
 	generate
-		for(j=0;j<extend_size;j=j+1) begin
-			assign data_o[j] = LLR[j]; 
-		end
 		for(l=1;l<=extend_size;l=l+1) begin
 			over f0(.a(forward_metrics[l-1][0]), .b(branch_metrics[l-1][0][0]), .result(forward_sum[l-1][0]) );
 			over f1(.a(forward_metrics[l-1][1]), .b(branch_metrics[l-1][1][0]), .result(forward_sum[l-1][1]) );
@@ -91,6 +107,7 @@ module Siso(
 			over f5(.a(forward_metrics[l-1][1]), .b(branch_metrics[l-1][1][2]), .result(forward_sum[l-1][5]) );
 			over f6(.a(forward_metrics[l-1][2]), .b(branch_metrics[l-1][2][3]), .result(forward_sum[l-1][6]) );
 			over f7(.a(forward_metrics[l-1][3]), .b(branch_metrics[l-1][3][3]), .result(forward_sum[l-1][7]) );
+
 			over b0(.a(backward_metrics[l-1][0]), .b(branch_metrics[extend_size-l][0][0]), .result(backward_sum[l-1][0]) );
 			over b1(.a(backward_metrics[l-1][2]), .b(branch_metrics[extend_size-l][0][2]), .result(backward_sum[l-1][1]) );
 			over b2(.a(backward_metrics[l-1][0]), .b(branch_metrics[extend_size-l][1][0]), .result(backward_sum[l-1][2]) );
@@ -109,6 +126,11 @@ module Siso(
 			over LLR5(.a(forward_sum[m][1]), .b(backward_metrics[extend_size-m-1][0]), .result(LLR_sum[m][5]) );
 			over LLR6(.a(forward_sum[m][6]), .b(backward_metrics[extend_size-m-1][3]), .result(LLR_sum[m][6]) );
 			over LLR7(.a(forward_sum[m][3]), .b(backward_metrics[extend_size-m-1][1]), .result(LLR_sum[m][7]) );
+
+			over Branch0(.a(sys_enc[m][3]), .b(ext_neg[m]), .result(branch_sum[m][0]) );
+			over Branch1(.a(sys_enc[m][0]), .b(ext[m]), 	.result(branch_sum[m][1]) );
+			over Branch2(.a(sys_enc[m][1]), .b(ext[m]), 	.result(branch_sum[m][2]) );
+			over Branch3(.a(sys_enc[m][2]), .b(ext_neg[m]), .result(branch_sum[m][3]) );
 		end
 	endgenerate
 
@@ -149,14 +171,14 @@ module Siso(
 			end
 			BRANCH: begin
 				for(k=0;k<extend_size;k=k+1) begin
-					branch_metrics[k][0][0] = -sys[k] - enc[k] - ext[k]; //0 + 0 + 0;
-					branch_metrics[k][0][2] =  sys[k] + enc[k] + ext[k]; //1 + 1 + 1;
-					branch_metrics[k][1][0] =  sys[k] - enc[k] + ext[k]; //1 + 0 + 1;
-					branch_metrics[k][1][2] = -sys[k] + enc[k] - ext[k]; //0 + 1 + 0;
-					branch_metrics[k][2][1] = -sys[k] - enc[k] - ext[k]; //0 + 0 + 0;
-					branch_metrics[k][2][3] =  sys[k] + enc[k] + ext[k]; //1 + 1 + 1;
-					branch_metrics[k][3][1] =  sys[k] - enc[k] + ext[k]; //1 + 0 + 1;
-					branch_metrics[k][3][3] = -sys[k] + enc[k] - ext[k]; //0 + 1 + 0;
+					branch_metrics[k][0][0] = branch_sum[k][0]; //0 + 0 + 0;
+					branch_metrics[k][0][2] = branch_sum[k][1]; //1 + 1 + 1;
+					branch_metrics[k][1][0] = branch_sum[k][2]; //1 + 0 + 1;
+					branch_metrics[k][1][2] = branch_sum[k][3]; //0 + 1 + 0;
+					branch_metrics[k][2][1] = branch_sum[k][0]; //0 + 0 + 0;
+					branch_metrics[k][2][3] = branch_sum[k][1]; //1 + 1 + 1;
+					branch_metrics[k][3][1] = branch_sum[k][2]; //1 + 0 + 1;
+					branch_metrics[k][3][3] = branch_sum[k][3]; //0 + 1 + 0;
 				end
 				state_nxt = FORWARD;
 			end

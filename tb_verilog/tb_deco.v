@@ -1,12 +1,12 @@
 `timescale 1ns/10ps
 `define CYCLE    10
 `define INPUT    "../data/golden.dat"                         
-`define EXPECT   "../data/ans.dat"
+`define EXPECT   "../data/actual.dat"
 
 module decoder_tb;
 
 parameter ITERATE       = 10'd16;
-parameter INPUT_SIZE    = 4'd3;
+parameter INPUT_SIZE    = 8'd160;
 
 // parameter  [15:0] data_arr [0:4] = '{
 //         16'b1111_0010_1100_1111,
@@ -122,14 +122,14 @@ end
 always @(posedge clk)begin
     if(done_o) begin
         if(out !== out_temp) begin
-            $display("ERROR at %d:output %d !=expect %d ", pattern_num, out, out_temp);
-            $fdisplay(out_error_f, "ERROR at %d:output %h !=expect %h ",pattern_num, out, out_temp);
+            $display("ERROR at %d:output %b !=expect %b ", pattern_num, out, out_temp);
+            $fdisplay(out_error_f, "ERROR at %d:output %b !=expect %b ",pattern_num, out, out_temp);
             err = err + 1;
         end
         else begin
-            $display("GREAT! You get %d and the output is %d", out, out_temp);
+            $display("GREAT! You get %b and the output is %b", out, out_temp);
         end
-        $fdisplay(out_f, "%d    output %h    expect %h ",pattern_num, out, out_temp);
+        $fdisplay(out_f, "%d    output %b    expect %b ",pattern_num, out, out_temp);
         pattern_num = pattern_num + 1; 
         $display("---------------------------------------------\n");
     end
@@ -138,14 +138,14 @@ initial begin
       @(posedge stop)      
       if(stop) begin
             if(out !== out_temp) begin
-                $display("ERROR at %d:output %d !=expect %d ", pattern_num, out, out_temp);
-                $fdisplay(out_error_f, "ERROR at %d:output %h !=expect %h ",pattern_num, out, out_temp);
+                $display("ERROR at %d:output %b !=expect %b ", pattern_num, out, out_temp);
+                $fdisplay(out_error_f, "ERROR at %d:output %b !=expect %b ",pattern_num, out, out_temp);
                 err = err + 1;
             end
             else begin
-                $display("GREAT! You get %d and the output is %d", out, out_temp);
+                $display("GREAT! You get %b and the output is %b", out, out_temp);
             end
-            $fdisplay(out_f, "%d    output %h    expect %h ",pattern_num, out, out_temp);
+            $fdisplay(out_f, "%d    output %b    expect %b ",pattern_num, out, out_temp);
             pattern_num = pattern_num + 1; 
             $display("---------------------------------------------\n");
             $display("There are %d errors!\n", err);
@@ -154,8 +154,8 @@ initial begin
       end
       else begin
         $display("---------------------------------------------\n");
-        $display("-------------SIMULATION FUCK!!!-------------\n");
-        $display("-------------------FAIL-------------------\n");
+        $display("-------------SIMULATION FAILED!!!------------\n");
+        $display("---------------------------------------------\n");
         $display("---------------------------------------------\n");
     end
       $finish;

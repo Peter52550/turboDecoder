@@ -27,9 +27,9 @@ module Deco(
              data_o,
              start_i,
              done_o,
-             );
+);
 
-    parameter MAX_ITER          = 16;
+    parameter MAX_ITER          = 10;
     parameter data_size         = 5'd10;
     parameter input_size        = 5;
     parameter extend_size       = 7;             // input_size + 2, adding 00 at the end
