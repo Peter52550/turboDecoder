@@ -5,11 +5,18 @@
 import itertools
 import numpy as np
 
-
+def overflow(num):
+    if(num > 511):
+        return 511
+    elif(num < -512):
+        return -512
+    else:
+        return num
 class Trellis:
     @staticmethod
     def butterfly(path_metrics, branch_metrics):
-        result = [path + branch for path, branch in zip(path_metrics, branch_metrics)]
+        # result = [path + branch for path, branch in zip(path_metrics, branch_metrics)]
+        result = [overflow(path + branch) for path, branch in zip(path_metrics, branch_metrics)]
         return np.max(result)
 
     def __init__(self):

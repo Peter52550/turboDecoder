@@ -8,7 +8,13 @@ import numpy as np
 
 from .trellis import Trellis
 
-
+def overflow(num):
+    if(num > 511):
+        return 511
+    elif(num < -512):
+        return -512
+    else:
+        return num
 class SISODecoder:
     @staticmethod
     def init_branch_metrics(m, n, depth):
@@ -45,7 +51,8 @@ class SISODecoder:
                 m, n = transition
                 i, o = self.trellis.transition_to_symbols(m, n)
 
-                self.branch_metrics[k, m, n] = i * tuples[k][0] + o * tuples[k][1] + i * tuples[k][2]
+                # self.branch_metrics[k, m, n] = i * tuples[k][0] + o * tuples[k][1] + i * tuples[k][2]
+                self.branch_metrics[k, m, n] = overflow(i * tuples[k][0] + o * tuples[k][1] + i * tuples[k][2])
 
     def compute_forward(self, k, state):
         past_states = self.trellis.past_states[state]
@@ -80,12 +87,12 @@ class SISODecoder:
             forward_metric = self.forward_metrics[k, m]
             branch_metric = self.branch_metrics[k, m, n]
             backward_metric = self.backward_metrics[r, n]
-
             if i < 0:
-                negative.append(forward_metric + branch_metric + backward_metric)
+                # negative.append(forward_metric + branch_metric + backward_metric)
+                negative.append(overflow(forward_metric + branch_metric + backward_metric))
             else:
-                positive.append(forward_metric + branch_metric + backward_metric)
-
+                # positive.append(forward_metric + branch_metric + backward_metric)
+                positive.append(overflow(forward_metric + branch_metric + backward_metric))
         self.LLR[k] = np.max(positive) - np.max(negative)
 
     def execute(self, tuples, i=None):
@@ -95,13 +102,13 @@ class SISODecoder:
             for state in range(0, 4):
                 self.compute_forward(k, state)
                 self.compute_backward(k, state)
-        if i==0:
-            print("tuples 0:", [tuples[k][0] for k in range(self.block_size)])
-            print("tuples 1:", [tuples[k][1] for k in range(self.block_size)])
-            print("tuples 2:", [tuples[k][2] for k in range(self.block_size)])
-            # print("branch:", self.branch_metrics)
-            # print("forward:", self.forward_metrics)
-            # print("backward:", self.backward_metrics)
+        # if i==:
+            # print("tuples 0:", [tuples[k][0] for k in range(self.block_size)])
+            # print("tuples 1:", [tuples[k][1] for k in range(self.block_size)])
+            # print("tuples 2:", [tuples[k][2] for k in range(self.block_size)])
+        # print("branch:", self.branch_metrics)
+        # print("forward:", self.forward_metrics)
+        # print("backward:", self.backward_metrics)
         ''' 
         for k in range(self.block_size, -1, -1):
             for state in range(0, 4):
