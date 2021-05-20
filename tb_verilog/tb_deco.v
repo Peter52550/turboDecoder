@@ -6,7 +6,7 @@
 module decoder_tb;
 
 parameter ITERATE       = 10'd16;
-parameter INPUT_SIZE    = 4'd1;
+parameter INPUT_SIZE    = 4'd3;
 
 // parameter  [15:0] data_arr [0:4] = '{
 //         16'b1111_0010_1100_1111,
@@ -83,12 +83,17 @@ end
 
 
 always @(negedge clk)begin
-    if(counter < INPUT_SIZE) begin
+    if(counter == INPUT_SIZE-1 && done_o) begin
+        out_temp = out_mem[counter];
+        stop = 1'd1;
+    end
+    else if(counter < INPUT_SIZE) begin
         if(done_o) begin 
             start = 0;
             iter = 0;
             out_temp = out_mem[counter];
             counter = counter + 1;
+            iter = 0;
         end
         else begin
             if(iter < 4) begin
@@ -99,7 +104,7 @@ always @(negedge clk)begin
             end
             else if(iter == 4) begin
                 start = 1;
-                iter = iter + 1;
+                // iter = ite;
             end
             else begin
                 start = 0;
@@ -107,12 +112,10 @@ always @(negedge clk)begin
             end
         end
     end
-    else if(counter == INPUT_SIZE && done_o) begin
-        stop = 1'd1;
-    end
     else begin                                  
        iter = 0;
        counter = 0;
+       start = 0;
     end
 end
 
@@ -134,10 +137,20 @@ end
 initial begin
       @(posedge stop)      
       if(stop) begin
-        $display("---------------------------------------------\n");
-        $display("There are %d errors!\n", err);
-        $display("The total accuracy is %d/%d\n", err, INPUT_SIZE);
-        $display("---------------------------------------------\n");
+            if(out !== out_temp) begin
+                $display("ERROR at %d:output %d !=expect %d ", pattern_num, out, out_temp);
+                $fdisplay(out_error_f, "ERROR at %d:output %h !=expect %h ",pattern_num, out, out_temp);
+                err = err + 1;
+            end
+            else begin
+                $display("GREAT! You get %d and the output is %d", out, out_temp);
+            end
+            $fdisplay(out_f, "%d    output %h    expect %h ",pattern_num, out, out_temp);
+            pattern_num = pattern_num + 1; 
+            $display("---------------------------------------------\n");
+            $display("There are %d errors!\n", err);
+            $display("The total accuracy is %d/%d\n", INPUT_SIZE-err, INPUT_SIZE);
+            $display("---------------------------------------------\n");
       end
       else begin
         $display("---------------------------------------------\n");

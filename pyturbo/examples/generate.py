@@ -1,9 +1,10 @@
 block_size  = 5
-num         = 1
+num         = 3
 bits        = 4
 boundary    = 1
 SNR = -1
-write_path = "golden.dat"
+input_path = "../../data/golden.dat"
+output_path = "../../data/ans.dat"
 
 import argparse
 import random
@@ -14,7 +15,11 @@ import os
 random.seed(42)
 np.random.seed(42)
 try:
-    os.remove(write_path)
+    os.remove(input_path)
+except OSError:
+    pass
+try:
+    os.remove(output_path)
 except OSError:
     pass
 
@@ -42,9 +47,10 @@ def convert(a, bit, bound):
 interleaver = random.sample(range(0, block_size), block_size)
 encoder = TurboEncoder(interleaver)
 decoder = TurboDecoder(interleaver)
-
+input_vector  = []
 for n in range(num):
     input_vector = np.random.randint(2, size=block_size)
+    print("original", input_vector)
     encoded_vector = encoder.execute(input_vector)
     channel = AWGN(SNR)
 
@@ -59,35 +65,40 @@ for n in range(num):
     new_vector = convert(channel_vector, bits, boundary)
     #print(new_vector)
     new_vector = np.array([round(i*7) for i in new_vector])
-    print("new_vector", new_vector)
+    # print("new_vector", new_vector)
     #print("input:", input_vector)
     #print("encoded", encoded_vector)
     #print("channel:", channel_vector)
     #print("new:", new_vector)
     reshuffled = np.concatenate((new_vector[::3], new_vector[1::3], new_vector[2::3]))
+    
     # print(new_vector[::3],new_vector[::3][::-1])
 
     # reshuffle = np.zeros((1,84))
     
     #print("output:", end=" ")
     
-    with open(write_path, "a+") as f:
+    with open(input_path, "a+") as f:
         inputs = []
         for i in reshuffled:
             # print(int(i), bins(int(i), 4))
             inputs.append(bins(int(i), 4))
-        print(inputs)
+        # print(inputs)
         text = ''
         for i in range(4):
             for string in inputs:
                 text = text + string[i]
                 # print(string)
-        print(text, " ", text[0:21], " ", text[21:42], " ", text[42:63], " ", text[63:84])
+        # print(text, " ", text[0:21], " ", text[21:42], " ", text[42:63], " ", text[63:84])
         for i in text:
             # print(bins(int(i), 4), end="", file=f)
             print(i, end="", file=f)
         print()
         print(file=f)
-
+    with open(output_path, "a+") as f:
+        for i in input_vector:
+            # print(bins(int(i), 4), end="", file=f)
+            print(i, end="", file=f)
+        print(file=f)
     decoder.execute(new_vector)
     decoder.reset()

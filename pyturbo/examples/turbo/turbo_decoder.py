@@ -18,6 +18,8 @@ class TurboDecoder:
     def early_exit(LLR, LLR_ext):
         LLR = [int(s > 0) for s in LLR]
         LLR_ext = [int(s > 0) for s in LLR_ext]
+        if(LLR == LLR_ext):
+            print([int(s > 0) for s in LLR])
         return LLR == LLR_ext
 
     def __init__(self, interleaver, tail_bits=2, max_iter=16):
@@ -50,35 +52,37 @@ class TurboDecoder:
 
     def iterate(self, vector, i):
         input_tuples = self.demultiplex(vector[::3], vector[1::3], self.LLR_ext)
-        print("vector[::3]", vector[::3], [bins(int(i), 4) for i in vector[::3]])
-        print("vector[1::3]", vector[1::3], [bins(int(i), 4) for i in vector[1::3]])
-        print("self.LLR_ext", self.LLR_ext, [bins(int(i), 10) for i in self.LLR_ext])
+        # print("vector[::3]", vector[::3], [bins(int(i), 4) for i in vector[::3]])
+        # print("vector[1::3]", vector[1::3], [bins(int(i), 4) for i in vector[1::3]])
+        # print("self.LLR_ext", self.LLR_ext, [bins(int(i), 10) for i in self.LLR_ext])
+        # print("=====================================")
         LLR_1 = self.decoders[0].execute(input_tuples, i)
 
-        # print("LLR_1", LLR_1, "self.LLR_ext", self.LLR_ext, "2 * vector[::3]", 2 * vector[::3])
-        print("LLR_1 binary: ", LLR_1, [bins(int(i), 10) for i in LLR_1])
+        # print("LLR_1 binary: ", LLR_1, [bins(int(i), 10) for i in LLR_1])
         LLR_1 = LLR_1 - self.LLR_ext - 2 * vector[::3]
+        
         LLR_interleaved = self.interleave(LLR_1)
         input_interleaved = self.interleave(vector[::3])
-        print("=====================================")
-        print("input_interleaved", input_interleaved, [bins(int(i), 4) for i in input_interleaved])
-        print("vector[2::3]", vector[2::3], [bins(int(i), 4) for i in vector[2::3]])
-        print("LLR_interleaved", LLR_interleaved, [bins(int(i), 10) for i in LLR_interleaved])
+        
+        # print("input_interleaved", input_interleaved, [bins(int(i), 4) for i in input_interleaved])
+        # print("vector[2::3]", vector[2::3], [bins(int(i), 4) for i in vector[2::3]])
+        # print("LLR_interleaved", LLR_interleaved, [bins(int(i), 10) for i in LLR_interleaved])
+        # print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
         input_tuples = self.demultiplex(input_interleaved, vector[2::3], LLR_interleaved)
 
         LLR_2 = self.decoders[1].execute(input_tuples)
-        # print("LLR_2", LLR_2,"LLR_interleaved", LLR_interleaved, " 2 * input_interleaved",  2 * input_interleaved)
-        print("LLR_2 binary ", [bins(int(i), 10) for i in LLR_2])
-        print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+        # print("LLR_2 binary ", LLR_2, [bins(int(i), 10) for i in LLR_2])
+        
         LLR_2 = LLR_2 - LLR_interleaved - 2 * input_interleaved
         self.LLR_ext = self.deinterleave(LLR_2)
-        # print("LLR_2", LLR_2)
-        # print("LLR_ext", self.LLR_ext)
+        # print("equal: ", LLR_1, [bins(int(i), 10) for i in LLR_1], " " , self.LLR_ext, [bins(int(i), 10) for i in self.LLR_ext])
         return self.early_exit(LLR_1, self.LLR_ext)
 
     def execute(self, vector):
         for i in range(self.max_iter):
+            # print("iteration ", i)
             if self.iterate(vector, i):
                 break
-
+            if(i == 15):
+                print("iteration finish", [int(s > 0) for s in self.LLR_ext])
         return self.LLR_ext

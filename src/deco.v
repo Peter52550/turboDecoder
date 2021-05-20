@@ -46,6 +46,9 @@ module Deco(
     input                       start_i;
     output                      done_o;
 
+    reg     [4:0]        out_reg; 
+    reg     [4:0]        LLR1_reg;
+    reg     [4:0]        LLR2_reg;
     wire    signed [27:0]              vec0_1D;
     wire    signed [27:0]              vec1_1D;
     wire    signed [69:0]              vec2_1D;
@@ -99,8 +102,7 @@ module Deco(
     wire   signed  [69:0]        middle2;
     wire   signed  [69:0]        middle3;
     wire   signed  [69:0]        middle4;
-    // assign vec1_1D = ;
-    // assign vec2_1D = {vec2[0][3:0], vec2[1][3:0], vec2[2][3:0], vec2[3][3:0], vec2[4][3:0], vec2[5][3:0], vec2[6][3:0]};
+   
     // assign ext_i   = ext_reg;
     Siso siso1(
       .clk_i(clk_p_i),
@@ -146,6 +148,7 @@ module Deco(
     assign vec0_1D = sys_reg;
     assign vec1_1D = enc_reg;
     assign vec2_1D = ext_reg;
+    assign data_o = out_reg;
     integer i;
     always @(*) begin
         temp_LLR_nxt = temp_LLR;
@@ -156,6 +159,7 @@ module Deco(
         done_nxt = done;
         case(state) 
             S_READ: begin
+                done_nxt = 0;
                 if(start_reg == 1) begin
                     if(read_counter < 4) begin
                         for(i=0;i<7;i=i+1) begin
@@ -235,15 +239,39 @@ module Deco(
                     
                     ext_reg_nxt  = temp_LLR_nxt;
                     read_counter_nxt = 0;
-                    if(iter_counter != MAX_ITER) begin
-                        state_nxt = S_DEC1;
-                        dec1_begin_nxt = 1;
-                        iter_counter_nxt = iter_counter + 1;
-                    end
-                    else begin
+
+                    LLR1_reg[4] = temp_LLR1_nxt[69] == 1 ? 0 : 1;
+                    LLR1_reg[3] = temp_LLR1_nxt[59] == 1 ? 0 : 1;
+                    LLR1_reg[2] = temp_LLR1_nxt[49] == 1 ? 0 : 1;
+                    LLR1_reg[1] = temp_LLR1_nxt[39] == 1 ? 0 : 1;
+                    LLR1_reg[0] = temp_LLR1_nxt[29] == 1 ? 0 : 1;
+                    LLR2_reg[4] = temp_LLR_nxt[69] == 1 ? 0 : 1;
+                    LLR2_reg[3] = temp_LLR_nxt[59] == 1 ? 0 : 1;
+                    LLR2_reg[2] = temp_LLR_nxt[49] == 1 ? 0 : 1;
+                    LLR2_reg[1] = temp_LLR_nxt[39] == 1 ? 0 : 1;
+                    LLR2_reg[0] = temp_LLR_nxt[29] == 1 ? 0 : 1;
+                    if(LLR1_reg == LLR2_reg) begin
                         state_nxt = S_ITER_FINISH;
                         dec1_begin_nxt = 0;
                         iter_counter_nxt = 0;
+                        out_reg = LLR2_reg;
+                    end
+                    else begin
+                        if(iter_counter != MAX_ITER-1) begin
+                            state_nxt = S_DEC1;
+                            dec1_begin_nxt = 1;
+                            iter_counter_nxt = iter_counter + 1;
+                        end
+                        else begin
+                            state_nxt = S_ITER_FINISH;
+                            dec1_begin_nxt = 0;
+                            iter_counter_nxt = 0;
+                            out_reg[4] = temp_LLR_nxt[69] == 1 ? 0 : 1;
+                            out_reg[3] = temp_LLR_nxt[59] == 1 ? 0 : 1;
+                            out_reg[2] = temp_LLR_nxt[49] == 1 ? 0 : 1;
+                            out_reg[1] = temp_LLR_nxt[39] == 1 ? 0 : 1;
+                            out_reg[0] = temp_LLR_nxt[29] == 1 ? 0 : 1;
+                        end
                     end
                 end
                 else begin
@@ -259,6 +287,8 @@ module Deco(
                 state_nxt = S_READ;
                 iter_counter_nxt = 0;
                 done_nxt = 1;
+                temp_LLR  = 70'b0;
+                temp_LLR1 = 70'b0;
             end           
         endcase
     end
