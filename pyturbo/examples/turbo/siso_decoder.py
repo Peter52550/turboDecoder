@@ -93,7 +93,7 @@ class SISODecoder:
             else:
                 # positive.append(forward_metric + branch_metric + backward_metric)
                 positive.append(overflow(forward_metric + branch_metric + backward_metric))
-        self.LLR[k] = np.max(positive) - np.max(negative)
+        self.LLR[k] = overflow(np.max(positive) - np.max(negative))
 
     def execute(self, tuples, i=None):
         self.compute_branch(tuples)
