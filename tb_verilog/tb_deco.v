@@ -2,6 +2,7 @@
 `define CYCLE    10
 `define INPUT    "../data/golden.dat"                         
 `define EXPECT   "../data/actual.dat"
+`define SDFFILE  "./deco.sdf"	          // Modify your sdf file name
 
 module decoder_tb;
 
