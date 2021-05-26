@@ -2,7 +2,7 @@
 read_file -format verilog deco.v
 read_file -format verilog siso.v
 
-current_design decoder_tb
+current_design Deco
 uniquify
 link
 
@@ -43,11 +43,11 @@ check_design
 compile -map_effort medium
 
 # Analyze and debug the design
-report_area > area_alu.out
-report_power > power_alu.out
-report_timing -path full -delay max > timing_alu.out
+report_area > area_deco.out
+report_power > power_deco.out
+report_timing -path full -delay max > timing_deco.out
 
 #write -format db -hierarchy -output $active_design.db
-write -format verilog -hierarchy -output Lab3_alu_syn.v
-write_sdf -version 2.1 -context verilog Lab3_alu.sdf
-write_sdc Lab3_alu.sdc
+write -format verilog -hierarchy -output deco_syn.v
+write_sdf -version 2.1 -context verilog deco.sdf
+write_sdc deco.sdc

@@ -80,7 +80,7 @@ class TurboDecoder:
         #print()
         LLR_2 = LLR_2 - LLR_interleaved - 2 * input_interleaved
         self.LLR_ext = self.deinterleave(LLR_2)
-        # print("equal: ", LLR_1, [bins(int(i), 10) for i in LLR_1], " " , self.LLR_ext, [bins(int(i), 10) for i in self.LLR_ext])
+        print("equal: ", LLR_1, [bins(int(i), 10) for i in LLR_1], " " , self.LLR_ext, [bins(int(i), 10) for i in self.LLR_ext])
         return self.early_exit(LLR_1, self.LLR_ext)
 
     def execute(self, vector):
