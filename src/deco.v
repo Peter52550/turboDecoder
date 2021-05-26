@@ -37,7 +37,6 @@ module Deco(
 
     parameter MAX_ITER          = 10;
     parameter data_size         = `LLR_BITS;
-    
     parameter input_size        = 5;
     parameter extend_size       = 7;                    // input_size + 2, adding 00 at the end
     parameter block_size        = 21;                   // 3 * (input_size + 2)

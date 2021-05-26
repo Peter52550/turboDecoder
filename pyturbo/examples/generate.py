@@ -5,6 +5,7 @@ boundary    = 1
 SNR = [-1, -0.9, -0.8, -0.7, -0.6]
 input_path = "../../data/golden.dat"
 output_path = "../../data/ans.dat"
+decode_path = "../../data/actual.dat"
 
 import argparse
 import random
@@ -20,6 +21,10 @@ except OSError:
     pass
 try:
     os.remove(output_path)
+except OSError:
+    pass
+try:
+    os.remove(decode_path)
 except OSError:
     pass
 
@@ -51,7 +56,7 @@ input_vector  = []
 for n in range(num):
     # input_vector = np.random.randint(2, size=block_size)
     input_vector = np.array(list(np.binary_repr(n).zfill(5))).astype(np.int8)
-    print("original", input_vector)
+    #print("original", [i for i in input_vector])
     encoded_vector = encoder.execute(input_vector)
 
     for s in SNR:
@@ -97,12 +102,20 @@ for n in range(num):
             for i in text:
                 # print(bins(int(i), 4), end="", file=f)
                 print(i, end="", file=f)
-            print()
+            #print()
+            print(file=f)
+        ans = decoder.execute(new_vector)
+        ans = [int(sym > 0) for sym in ans[:5]]
+        decoder.reset()
+        with open(decode_path, "a+") as f:
+            for i in ans:
+                # print(bins(int(i), 4), end="", file=f)
+                print(i, end="", file=f)
             print(file=f)
         with open(output_path, "a+") as f:
             for i in input_vector:
                 # print(bins(int(i), 4), end="", file=f)
                 print(i, end="", file=f)
             print(file=f)
-        decoder.execute(new_vector)
-        decoder.reset()
+        #print(f"SNR = {s}", [int(b > 0) for b in ans[:5]])
+        
