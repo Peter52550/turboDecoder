@@ -2,7 +2,7 @@
 read_file -format verilog deco.v
 read_file -format verilog siso.v
 
-current_design decoder_tb
+current_design Deco
 uniquify
 link
 
