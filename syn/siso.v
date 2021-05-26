@@ -54,7 +54,7 @@ module Siso(
 	output                      finish;
 
 	/* =======================REG & wire================================ */
-	reg					[2:0]						state, state_nxt;
+	reg	        [2:0]			state, state_nxt;
 	reg                         done, done_nxt;
 	assign finish = done;
 
