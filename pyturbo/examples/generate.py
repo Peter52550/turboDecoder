@@ -105,7 +105,7 @@ for n in range(num):
             #print()
             print(file=f)
         ans = decoder.execute(new_vector)
-        ans = [int(sym > 0) for sym in ans[:5]]
+        ans = [int(sym >= 0) for sym in ans[:5]]
         decoder.reset()
         with open(decode_path, "a+") as f:
             for i in ans:
@@ -117,5 +117,5 @@ for n in range(num):
                 # print(bins(int(i), 4), end="", file=f)
                 print(i, end="", file=f)
             print(file=f)
-        #print(f"SNR = {s}", [int(b > 0) for b in ans[:5]])
+        #print(f"SNR = {s}", [int(b >= 0) for b in ans[:5]])
         

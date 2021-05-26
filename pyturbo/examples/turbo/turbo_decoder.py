@@ -24,10 +24,10 @@ class TurboDecoder:
 
     @staticmethod
     def early_exit(LLR, LLR_ext):
-        LLR = [int(s > 0) for s in LLR[:-2]]
-        LLR_ext = [int(s > 0) for s in LLR_ext[:-2]]
+        LLR = [int(s >= 0) for s in LLR[:-2]]
+        LLR_ext = [int(s >= 0) for s in LLR_ext[:-2]]
         #if(LLR == LLR_ext):
-        #    print("EARLY EXIT!:", [int(s > 0) for s in LLR])
+        #    print("EARLY EXIT!:", [int(s >= 0) for s in LLR])
         return LLR == LLR_ext
 
     def __init__(self, interleaver, tail_bits=2, max_iter=10):
@@ -93,7 +93,7 @@ class TurboDecoder:
         #print()
         #print("input_interleaved", input_interleaved, [bins(int(i), 4) for i in input_interleaved])
         #print("vector[2::3]", vector[2::3], [bins(int(i), 4) for i in vector[2::3]])
-        #print("LLR_interleaved", LLR_interleaved, [bins(int(i), 10) for i in LLR_interleaved])
+        #print("LLR_interleaved", LLR_interleaved)
         #print()
         input_tuples = self.demultiplex(input_interleaved, vector[2::3], LLR_interleaved)
 
@@ -114,7 +114,8 @@ class TurboDecoder:
         LLR_2 = np.array([overflow(a) for a in LLR_2_temp_3])
 
         self.LLR_ext = self.deinterleave(LLR_2)
-        #print("equal: ", [int(s > 0) for s in LLR_1[:-2]], [bins(int(i > 0), 10) for i in LLR_1[:-2]], " " , [int(s > 0) for s in self.LLR_ext[:-2]], [bins(int(i > 0), 10) for i in self.LLR_ext[:-2]])
+        #print("LLR_ext", self.LLR_ext)
+        #print("equal: \n", [int(s >= 0) for s in LLR_1[:-2]], " " , [int(s >= 0) for s in self.LLR_ext[:-2]])
         return self.early_exit(LLR_1, self.LLR_ext)
 
     def execute(self, vector):
@@ -123,5 +124,5 @@ class TurboDecoder:
             if self.iterate(vector, i):
                 break
             #if(i == 15):
-            #    print("iteration finish", [int(s > 0) for s in self.LLR_ext])
+            #    print("iteration finish", [int(s >= 0) for s in self.LLR_ext])
         return self.LLR_ext
