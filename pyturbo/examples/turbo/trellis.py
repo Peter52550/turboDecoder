@@ -5,13 +5,15 @@
 import itertools
 import numpy as np
 
+data_size = 13
 def overflow(num):
-    if(num > 511):
-        return 511
-    elif(num < -512):
-        return -512
+    if(num > 2**(data_size-1)-1):
+        return 2**(data_size-1)-1
+    elif(num < -2**(data_size-1)):
+        return -2**(data_size-1)
     else:
         return num
+        
 class Trellis:
     @staticmethod
     def butterfly(path_metrics, branch_metrics):

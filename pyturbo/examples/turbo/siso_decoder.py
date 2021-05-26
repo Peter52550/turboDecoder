@@ -7,14 +7,15 @@ import itertools
 import numpy as np
 
 from .trellis import Trellis
-
+data_size = 13
 def overflow(num):
-    if(num > 511):
-        return 511
-    elif(num < -512):
-        return -512
+    if(num > 2**(data_size-1)-1):
+        return 2**(data_size-1)-1
+    elif(num < -2**(data_size-1)):
+        return -2**(data_size-1)
     else:
         return num
+        
 class SISODecoder:
     @staticmethod
     def init_branch_metrics(m, n, depth):
@@ -22,7 +23,7 @@ class SISODecoder:
 
     @staticmethod
     def init_path_metric(m, depth):
-        matrix = np.array(depth * [m * [-512]])
+        matrix = np.array(depth * [m * [-2**(data_size-1)]])
         matrix[:, 0] = 0
         return matrix
 
@@ -103,12 +104,12 @@ class SISODecoder:
                 self.compute_forward(k, state)
                 self.compute_backward(k, state)
         # if i==:
-            # print("tuples 0:", [tuples[k][0] for k in range(self.block_size)])
-            # print("tuples 1:", [tuples[k][1] for k in range(self.block_size)])
-            # print("tuples 2:", [tuples[k][2] for k in range(self.block_size)])
-        # print("branch:", self.branch_metrics)
-        # print("forward:", self.forward_metrics)
-        # print("backward:", self.backward_metrics)
+        #print("tuples 0:", [tuples[k][0] for k in range(self.block_size)])
+        #print("tuples 1:", [tuples[k][1] for k in range(self.block_size)])
+        #print("tuples 2:", [tuples[k][2] for k in range(self.block_size)])
+        #print("branch:", self.branch_metrics)
+        #print("forward:", self.forward_metrics)
+        #print("backward:", self.backward_metrics)
         ''' 
         for k in range(self.block_size, -1, -1):
             for state in range(0, 4):
