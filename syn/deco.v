@@ -156,16 +156,6 @@ module Deco(
     assign vec2_1D = ext_reg;
     assign data_o = out_reg;
     integer i,j;
-    integer siso_f, count;
-    initial begin
-        count = 1;
-        siso_f = $fopen("siso.dat");
-    end
-    always@(siso1_o) begin
-        $fdisplay(siso_f, "%3d %b ", count, siso1_o);
-        //$fdisplay(siso_f, $time, " %3d %b ", count, siso1_o);
-        count = count + 1;
-    end
     always @(*) begin
         for(i=0;i<extend_size;i=i+1) begin
             temp_LLR_nxt[i] = temp_LLR[i];
