@@ -1,6 +1,6 @@
 // DEFINE NUMBER OF BITS TO REPRESENT LLR HERE!!
 //
-`define LLR_BITS    13
+`define LLR_BITS    12
 //
 //
 
@@ -157,6 +157,7 @@ module Deco(
     end
     always@(siso1_o) begin
         $fdisplay(siso_f, "%3d %b ", count, siso1_o);
+        //$fdisplay(siso_f, $time, " %3d %b ", count, siso1_o);
         count = count + 1;
     end
     always @(*) begin

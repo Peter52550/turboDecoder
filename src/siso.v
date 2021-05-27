@@ -1,6 +1,6 @@
 // DEFINE NUMBER OF BITS TO REPRESENT LLR HERE!!
 //
-`define LLR_BITS    13
+`define LLR_BITS    12
 //
 //
 
@@ -82,9 +82,16 @@ module Siso(
 	wire signed	[data_size-1:0]	backward_sum			[0:extend_size-1] [0:7];
 	wire signed	[data_size-1:0]	LLR_sum					[0:extend_size-1] [0:7];
 
-	reg signed  [data_size-1:0] negative            [0:3];    
-	reg signed  [data_size-1:0] positive            [0:3];  
-	reg signed  [data_size-1:0] max_negative, max_positive, temp_positive_1,temp_positive_2, temp_negative_1, temp_negative_2;
+	reg signed  [data_size-1:0] negative            [0:extend_size-1][0:3];    
+	reg signed  [data_size-1:0] positive            [0:extend_size-1][0:3];  
+	reg signed  [data_size-1:0] max_negative		[0:extend_size-1];
+	reg signed  [data_size-1:0] max_negative_neg	[0:extend_size-1];
+	reg signed  [data_size-1:0] max_positive		[0:extend_size-1];
+	reg signed  [data_size-1:0] temp_positive_1		[0:extend_size-1];
+	reg signed  [data_size-1:0] temp_positive_2		[0:extend_size-1];
+	reg signed  [data_size-1:0] temp_negative_1		[0:extend_size-1];
+	reg signed  [data_size-1:0] temp_negative_2		[0:extend_size-1];
+	wire signed [data_size-1:0] LLR_result			[0:extend_size-1];
 
 	integer k, n; 
 	/* ====================Combinational Part================== */
@@ -96,6 +103,7 @@ module Siso(
 			sys_neg[n] = ~sys[n] + 1;
 			enc_neg[n] = ~enc[n] + 1;
 			ext_neg[n] = ~ext[n] + 1;
+			max_negative_neg[n] = ~max_negative[n] + 1;
 			sys_enc[n][0] = sys[n] + enc[n];
 			sys_enc[n][1] = sys[n] - enc[n];
 			sys_enc[n][2] = -sys[n] + enc[n];
@@ -133,6 +141,8 @@ module Siso(
 			over LLR5(.a(forward_sum[m][1]), .b(backward_metrics[extend_size-m-1][0]), .result(LLR_sum[m][5]) );
 			over LLR6(.a(forward_sum[m][6]), .b(backward_metrics[extend_size-m-1][3]), .result(LLR_sum[m][6]) );
 			over LLR7(.a(forward_sum[m][3]), .b(backward_metrics[extend_size-m-1][1]), .result(LLR_sum[m][7]) );
+
+			over LLRk(.a(max_positive[m]), .b(max_negative_neg[m]), .result(LLR_result[m]) );
 
 			over Branch0(.a(sys_enc[m][3]), .b(ext_neg[m]), .result(branch_sum[m][0]) );
 			over Branch1(.a(sys_enc[m][0]), .b(ext[m]), 	.result(branch_sum[m][1]) );
@@ -217,21 +227,22 @@ module Siso(
 			end
 			LLR_COMPUTE: begin
 				for(k=0;k<extend_size;k=k+1) begin
-					negative[1] = LLR_sum[k][0];
-					negative[2] = LLR_sum[k][1];
-					negative[3] = LLR_sum[k][2];
-					negative[0] = LLR_sum[k][3];
-					positive[1] = LLR_sum[k][4];
-					positive[2] = LLR_sum[k][5];
-					positive[3] = LLR_sum[k][6];
-					positive[0] = LLR_sum[k][7];
-					temp_positive_1 = (positive[1]>positive[2]) ? positive[1] : positive[2];
-					temp_positive_2 = (positive[3]>positive[0]) ? positive[3] : positive[0];
-					max_positive = (temp_positive_1>temp_positive_2) ? temp_positive_1 : temp_positive_2;
-					temp_negative_1 = (negative[1]>negative[2]) ? negative[1] : negative[2];
-					temp_negative_2 = (negative[3]>negative[0]) ? negative[3] : negative[0];
-					max_negative = (temp_negative_1>temp_negative_2) ? temp_negative_1 : temp_negative_2;
-					LLR[k] = max_positive - max_negative;
+					negative[k][0] = LLR_sum[k][0];
+					negative[k][1] = LLR_sum[k][1];
+					negative[k][2] = LLR_sum[k][2];
+					negative[k][3] = LLR_sum[k][3];
+					positive[k][0] = LLR_sum[k][4];
+					positive[k][1] = LLR_sum[k][5];
+					positive[k][2] = LLR_sum[k][6];
+					positive[k][3] = LLR_sum[k][7];
+					temp_positive_1[k] = (positive[k][0]>positive[k][1]) ? positive[k][0] : positive[k][1];
+					temp_positive_2[k] = (positive[k][2]>positive[k][3]) ? positive[k][2] : positive[k][3];
+					max_positive[k] = (temp_positive_1[k]>temp_positive_2[k]) ? temp_positive_1[k] : temp_positive_2[k];
+					temp_negative_1[k] = (negative[k][0]>negative[k][1]) ? negative[k][0] : negative[k][1];
+					temp_negative_2[k] = (negative[k][2]>negative[k][3]) ? negative[k][2] : negative[k][3];
+					max_negative[k] = (temp_negative_1[k]>temp_negative_2[k]) ? temp_negative_1[k] : temp_negative_2[k];
+					//LLR[k] = max_positive - max_negative;
+					LLR[k] = LLR_result[k];
 				end
 				state_nxt = READ_DATA;
 				done_nxt  = 1;
