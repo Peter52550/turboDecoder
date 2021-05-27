@@ -1,11 +1,5 @@
-// DEFINE NUMBER OF BITS TO REPRESENT LLR HERE!!
-//
-`define LLR_BITS    12
-//
-//
-
 module over(a, b, result);
-	parameter WIDTH = `LLR_BITS;
+	parameter WIDTH = 10;
 	parameter MSB   = WIDTH-1;
 	parameter neg 	= {1'b1, {(WIDTH-1){1'b0}}};
 	parameter pos 	= {1'b0, {(WIDTH-1){1'b1}}};
@@ -37,17 +31,16 @@ module Siso(
 	);
 
 	/*========================Parameter declaration===================== */	
-	parameter data_size  	= `LLR_BITS;                            // every number size = 4
-	parameter input_size 	= 5;                                // input size (bit length) before encoding = 5
-	parameter extend_size	= 7;                                // input_size + 2][adding 00 at the end
-	parameter block_size 	= 21;                               // 3 * (input_size + 2)
-	parameter neg_inf    	= {1'b1, {(data_size-1){1'b0}}};    // - 2^(data_size-1) 
-	parameter LLR_size	 	= extend_size*data_size;
-	parameter READ_DATA  	= 3'b000;
-	parameter BRANCH     	= 3'b001;
-	parameter FORWARD    	= 3'b010;
-	parameter BACKWARD   	= 3'b011;
-	parameter LLR_COMPUTE	= 3'b100;
+	parameter data_size   = 5'd10;                            // every number size = 4
+	parameter input_size  = 5;                                // input size (bit length) before encoding = 5
+	parameter extend_size = 7;                                // input_size + 2][adding 00 at the end
+	parameter block_size  = 21;                               // 3 * (input_size + 2)
+	parameter neg_inf     = {1'b1, {(data_size-1){1'b0}}};    // - 2^(data_size-1) 
+	parameter READ_DATA   = 3'b000;
+	parameter BRANCH      = 3'b001;
+	parameter FORWARD     = 3'b010;
+	parameter BACKWARD    = 3'b011;
+	parameter LLR_COMPUTE = 3'b100;
 
 	/*========================IO declaration============================ */	  
 	input                       clk_i;
@@ -56,12 +49,12 @@ module Siso(
 	// input           	        data_i;       [0:block_size-1];  
 	input  signed  [28-1:0]     sys_i;
 	input  signed  [28-1:0]     enc_i;
-	input  signed  [LLR_size-1:0]     ext_i;
-	output signed  [LLR_size-1:0]     data_o;
+	input  signed  [70-1:0]     ext_i;
+	output signed  [70-1:0]     data_o;
 	output                      finish;
 
 	/* =======================REG & wire================================ */
-	reg					[2:0]						state, state_nxt;
+	reg	        [2:0]			state, state_nxt;
 	reg                         done, done_nxt;
 	assign finish = done;
 
@@ -82,16 +75,9 @@ module Siso(
 	wire signed	[data_size-1:0]	backward_sum			[0:extend_size-1] [0:7];
 	wire signed	[data_size-1:0]	LLR_sum					[0:extend_size-1] [0:7];
 
-	reg signed  [data_size-1:0] negative            [0:extend_size-1][0:3];    
-	reg signed  [data_size-1:0] positive            [0:extend_size-1][0:3];  
-	reg signed  [data_size-1:0] max_negative		[0:extend_size-1];
-	reg signed  [data_size-1:0] max_negative_neg	[0:extend_size-1];
-	reg signed  [data_size-1:0] max_positive		[0:extend_size-1];
-	reg signed  [data_size-1:0] temp_positive_1		[0:extend_size-1];
-	reg signed  [data_size-1:0] temp_positive_2		[0:extend_size-1];
-	reg signed  [data_size-1:0] temp_negative_1		[0:extend_size-1];
-	reg signed  [data_size-1:0] temp_negative_2		[0:extend_size-1];
-	wire signed [data_size-1:0] LLR_result			[0:extend_size-1];
+	reg signed  [data_size-1:0] negative            [0:3];    
+	reg signed  [data_size-1:0] positive            [0:3];  
+	reg signed  [data_size-1:0] max_negative, max_positive, temp_positive_1,temp_positive_2, temp_negative_1, temp_negative_2;
 
 	integer k, n; 
 	/* ====================Combinational Part================== */
@@ -103,7 +89,6 @@ module Siso(
 			sys_neg[n] = ~sys[n] + 1;
 			enc_neg[n] = ~enc[n] + 1;
 			ext_neg[n] = ~ext[n] + 1;
-			max_negative_neg[n] = ~max_negative[n] + 1;
 			sys_enc[n][0] = sys[n] + enc[n];
 			sys_enc[n][1] = sys[n] - enc[n];
 			sys_enc[n][2] = -sys[n] + enc[n];
@@ -142,8 +127,6 @@ module Siso(
 			over LLR6(.a(forward_sum[m][6]), .b(backward_metrics[extend_size-m-1][3]), .result(LLR_sum[m][6]) );
 			over LLR7(.a(forward_sum[m][3]), .b(backward_metrics[extend_size-m-1][1]), .result(LLR_sum[m][7]) );
 
-			over LLRk(.a(max_positive[m]), .b(max_negative_neg[m]), .result(LLR_result[m]) );
-
 			over Branch0(.a(sys_enc[m][3]), .b(ext_neg[m]), .result(branch_sum[m][0]) );
 			over Branch1(.a(sys_enc[m][0]), .b(ext[m]), 	.result(branch_sum[m][1]) );
 			over Branch2(.a(sys_enc[m][1]), .b(ext[m]), 	.result(branch_sum[m][2]) );
@@ -172,13 +155,13 @@ module Siso(
 						enc[1] = enc_i[23:20];
 						enc[0] = enc_i[27:24];
 
-						ext[6] = ext_i[LLR_size-1 - 6*data_size -: data_size];
-						ext[5] = ext_i[LLR_size-1 - 5*data_size -: data_size];
-						ext[4] = ext_i[LLR_size-1 - 4*data_size -: data_size];
-						ext[3] = ext_i[LLR_size-1 - 3*data_size -: data_size];
-						ext[2] = ext_i[LLR_size-1 - 2*data_size -: data_size];
-						ext[1] = ext_i[LLR_size-1 - data_size -: data_size];
-						ext[0] = ext_i[LLR_size-1 -: data_size];
+						ext[6] = ext_i[9:0];
+						ext[5] = ext_i[19:10];
+						ext[4] = ext_i[29:20];
+						ext[3] = ext_i[39:30];
+						ext[2] = ext_i[49:40];
+						ext[1] = ext_i[59:50];
+						ext[0] = ext_i[69:60];
 						
 						state_nxt = BRANCH;
 					end
@@ -227,22 +210,21 @@ module Siso(
 			end
 			LLR_COMPUTE: begin
 				for(k=0;k<extend_size;k=k+1) begin
-					negative[k][0] = LLR_sum[k][0];
-					negative[k][1] = LLR_sum[k][1];
-					negative[k][2] = LLR_sum[k][2];
-					negative[k][3] = LLR_sum[k][3];
-					positive[k][0] = LLR_sum[k][4];
-					positive[k][1] = LLR_sum[k][5];
-					positive[k][2] = LLR_sum[k][6];
-					positive[k][3] = LLR_sum[k][7];
-					temp_positive_1[k] = (positive[k][0]>positive[k][1]) ? positive[k][0] : positive[k][1];
-					temp_positive_2[k] = (positive[k][2]>positive[k][3]) ? positive[k][2] : positive[k][3];
-					max_positive[k] = (temp_positive_1[k]>temp_positive_2[k]) ? temp_positive_1[k] : temp_positive_2[k];
-					temp_negative_1[k] = (negative[k][0]>negative[k][1]) ? negative[k][0] : negative[k][1];
-					temp_negative_2[k] = (negative[k][2]>negative[k][3]) ? negative[k][2] : negative[k][3];
-					max_negative[k] = (temp_negative_1[k]>temp_negative_2[k]) ? temp_negative_1[k] : temp_negative_2[k];
-					//LLR[k] = max_positive - max_negative;
-					LLR[k] = LLR_result[k];
+					negative[1] = LLR_sum[k][0];
+					negative[2] = LLR_sum[k][1];
+					negative[3] = LLR_sum[k][2];
+					negative[0] = LLR_sum[k][3];
+					positive[1] = LLR_sum[k][4];
+					positive[2] = LLR_sum[k][5];
+					positive[3] = LLR_sum[k][6];
+					positive[0] = LLR_sum[k][7];
+					temp_positive_1 = (positive[1]>positive[2]) ? positive[1] : positive[2];
+					temp_positive_2 = (positive[3]>positive[0]) ? positive[3] : positive[0];
+					max_positive = (temp_positive_1>temp_positive_2) ? temp_positive_1 : temp_positive_2;
+					temp_negative_1 = (negative[1]>negative[2]) ? negative[1] : negative[2];
+					temp_negative_2 = (negative[3]>negative[0]) ? negative[3] : negative[0];
+					max_negative = (temp_negative_1>temp_negative_2) ? temp_negative_1 : temp_negative_2;
+					LLR[k] = max_positive - max_negative;
 				end
 				state_nxt = READ_DATA;
 				done_nxt  = 1;
