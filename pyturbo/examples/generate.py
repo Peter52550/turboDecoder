@@ -2,14 +2,15 @@ block_size  = 5
 num         = 32
 bits        = 4
 boundary    = 1
-SNR = [-1, -0.9, -0.8, -0.7, -0.6]
+import numpy as np
+SNR = [*np.linspace(-2,2,21)] # SNR from -2 to 2, with 21 datapoints inbetween
 input_path = "../../data/golden.dat"
 output_path = "../../data/ans.dat"
 decode_path = "../../data/actual.dat"
 
 import argparse
 import random
-import numpy as np
+#import numpy as np
 import matplotlib.pyplot as plot
 import copy
 import os

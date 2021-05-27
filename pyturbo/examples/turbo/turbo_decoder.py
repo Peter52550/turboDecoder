@@ -5,8 +5,8 @@
 import numpy as np
 
 from .siso_decoder import SISODecoder
-data_size = 13
-def overflow(num):
+
+def overflow(num, data_size):
     if(num > 2**(data_size-1)-1):
         return 2**(data_size-1)-1
     elif(num < -2**(data_size-1)):
@@ -38,6 +38,9 @@ class TurboDecoder:
 
         self.decoders = 2 * [SISODecoder(self.block_size + tail_bits)]
         self.count = 1
+        self.data_size = self.decoders[0].data_size
+        self.debug = self.decoders[0].debug
+        self.print_siso = False
         self.reset()
 
     def reset(self):
@@ -72,20 +75,22 @@ class TurboDecoder:
         #print()
         LLR_1 = self.decoders[0].execute(input_tuples, i)
 
-        #print(f"{i}\tLLR_1: {LLR_1}")
-        print(str(self.count).rjust(3), end=" ")
-        self.count += 1
-        for j in [bins(int(i), data_size) for i in LLR_1]:
-            print(j, end="")
-        print()
+        if self.debug:
+            print(f"LLR_1: {LLR_1}")
+        if self.debug or self.print_siso:
+            print(str(self.count).rjust(3), end=" ")
+            self.count += 1
+            for j in [bins(int(i), self.data_size) for i in LLR_1]:
+                print(j, end="")
+            print()
 
         #LLR_1 = LLR_1 - self.LLR_ext - 2 * vector[::3]
         LLR_1_temp_1 = LLR_1 - self.LLR_ext
-        LLR_1_temp_1 = np.array([overflow(a) for a in LLR_1_temp_1])
+        LLR_1_temp_1 = np.array([overflow(a, self.data_size) for a in LLR_1_temp_1])
         LLR_1_temp_2 = LLR_1_temp_1 - vector[::3]
-        LLR_1_temp_2 = np.array([overflow(a) for a in LLR_1_temp_2])
+        LLR_1_temp_2 = np.array([overflow(a, self.data_size) for a in LLR_1_temp_2])
         LLR_1_temp_3 = LLR_1_temp_2 - vector[::3]
-        LLR_1 = np.array([overflow(a) for a in LLR_1_temp_3])
+        LLR_1 = np.array([overflow(a, self.data_size) for a in LLR_1_temp_3])
 
         LLR_interleaved = self.interleave(LLR_1)
         input_interleaved = self.interleave(vector[::3])
@@ -93,29 +98,33 @@ class TurboDecoder:
         #print()
         #print("input_interleaved", input_interleaved, [bins(int(i), 4) for i in input_interleaved])
         #print("vector[2::3]", vector[2::3], [bins(int(i), 4) for i in vector[2::3]])
-        #print("LLR_interleaved", LLR_interleaved)
+        if self.debug:
+            print("LLR_interleaved", LLR_interleaved)
         #print()
         input_tuples = self.demultiplex(input_interleaved, vector[2::3], LLR_interleaved)
 
         LLR_2 = self.decoders[1].execute(input_tuples)
-        #print(f"{i}\tLLR_2: {LLR_2}")
-        print(str(self.count).rjust(3), end=" ")
-        self.count += 1
-        for j in [bins(int(i), data_size) for i in LLR_2]:
-            print(j, end="")
-        print()
+        if self.debug:
+            print(f"LLR_2: {LLR_2}")
+        if self.debug or self.print_siso:
+            print(str(self.count).rjust(3), end=" ")
+            self.count += 1
+            for j in [bins(int(i), self.data_size) for i in LLR_2]:
+                print(j, end="")
+            print()
 
         #LLR_2 = LLR_2 - LLR_interleaved - 2 * input_interleaved
         LLR_2_temp_1 = LLR_2 - LLR_interleaved 
-        LLR_2_temp_1 = np.array([overflow(a) for a in LLR_2_temp_1])
+        LLR_2_temp_1 = np.array([overflow(a, self.data_size) for a in LLR_2_temp_1])
         LLR_2_temp_2 = LLR_2_temp_1 - input_interleaved
-        LLR_2_temp_2 = np.array([overflow(a) for a in LLR_2_temp_2])
+        LLR_2_temp_2 = np.array([overflow(a, self.data_size) for a in LLR_2_temp_2])
         LLR_2_temp_3 = LLR_2_temp_2 - input_interleaved
-        LLR_2 = np.array([overflow(a) for a in LLR_2_temp_3])
+        LLR_2 = np.array([overflow(a, self.data_size) for a in LLR_2_temp_3])
 
         self.LLR_ext = self.deinterleave(LLR_2)
-        #print("LLR_ext", self.LLR_ext)
-        #print("equal: \n", [int(s >= 0) for s in LLR_1[:-2]], " " , [int(s >= 0) for s in self.LLR_ext[:-2]])
+        if self.debug:
+            print("LLR_ext", self.LLR_ext)
+            print("equal: \n", [int(s >= 0) for s in LLR_1[:-2]], " " , [int(s >= 0) for s in self.LLR_ext[:-2]])
         return self.early_exit(LLR_1, self.LLR_ext)
 
     def execute(self, vector):
