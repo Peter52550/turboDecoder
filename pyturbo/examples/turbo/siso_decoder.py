@@ -23,7 +23,7 @@ class SISODecoder:
 
 
     def init_path_metric(self, m, depth):
-        matrix = np.array(depth * [m * [-2**(self.data_size-1)]])
+        matrix = np.array(depth * [m * [-2**(self.data_size-2)]])
         matrix[:, 0] = 0
         return matrix
 

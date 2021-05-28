@@ -4,28 +4,6 @@
 //
 //
 
-module over1(a, b, result);
-	parameter WIDTH = `LLR_BITS;
-	parameter MSB   = WIDTH-1;
-	parameter neg 	= {1'b1, {(WIDTH-1){1'b0}}};
-	parameter pos 	= {1'b0, {(WIDTH-1){1'b1}}};
-	input signed [WIDTH-1:0] a, b;
-	output reg signed [WIDTH-1:0] result;
-
-	reg signed [WIDTH-1:0] temp;
-	reg overflow, underflow;
-	reg extra;
-    reg signed [WIDTH-1:0] b_com;
-	always @* begin
-        b_com = ~b + 1;
-		{extra, temp} = {a[MSB], a} + {b_com[MSB], b_com};
-		overflow  = ({extra, temp[MSB]} == 2'b01) ? 1'b1 : 1'b0;
-		underflow = ({extra, temp[MSB]} == 2'b10) ? 1'b1 : 1'b0;
-		result = 	(overflow) 	? pos : 
-					(underflow)	? neg : temp;
-	end
-endmodule
-
 module Deco(
              clk_p_i,
              reset_n_i,
@@ -120,36 +98,36 @@ module Deco(
       .data_o(siso1_o),
       .finish(dec1_finish)
     );  
-    over1 M111(.a(siso1_o[LLR_size-1 -: data_size]),  .b(temp_LLR[0]),  .result(middle1[LLR_size-1 -: data_size]));
-    over1 M121(.a(middle1[LLR_size-1 -: data_size]),  .b({{(data_size-4){vec0[0][3]}}, vec0[0]}),  .result(middle2[LLR_size-1 -: data_size]));
-    over1 M131(.a(middle2[LLR_size-1 -: data_size]),  .b({{(data_size-4){vec0[0][3]}}, vec0[0]}),  .result(ext_out[0]));
-    over1 M211(.a(siso1_o[LLR_size-1 - 4*data_size -: data_size]),  .b(temp_LLR[4]),  .result(middle1[LLR_size-1 - data_size -: data_size]));
-    over1 M221(.a(middle1[LLR_size-1 - data_size -: data_size]),  .b({{(data_size-4){vec0[4][3]}}, vec0[4]}),  .result(middle2[LLR_size-1 - data_size -: data_size]));
-    over1 M231(.a(middle2[LLR_size-1 - data_size -: data_size]),  .b({{(data_size-4){vec0[4][3]}}, vec0[4]}),  .result(ext_out[1]));
-    over1 M311(.a(siso1_o[LLR_size-1 - 2*data_size -: data_size]),  .b(temp_LLR[2]),  .result(middle1[LLR_size-1 - 2*data_size -: data_size]));
-    over1 M321(.a(middle1[LLR_size-1 - 2*data_size -: data_size]),  .b({{(data_size-4){vec0[2][3]}}, vec0[2]}),  .result(middle2[LLR_size-1 - 2*data_size -: data_size]));
-    over1 M331(.a(middle2[LLR_size-1 - 2*data_size -: data_size]),  .b({{(data_size-4){vec0[2][3]}}, vec0[2]}),  .result(ext_out[2]));
-    over1 M411(.a(siso1_o[LLR_size-1 - data_size -: data_size]),  .b(temp_LLR[1]),  .result(middle1[LLR_size-1 - 3*data_size -: data_size]));
-    over1 M421(.a(middle1[LLR_size-1 - 3*data_size -: data_size]),  .b({{(data_size-4){vec0[1][3]}}, vec0[1]}),  .result(middle2[LLR_size-1 - 3*data_size -: data_size]));
-    over1 M431(.a(middle2[LLR_size-1 - 3*data_size -: data_size]),  .b({{(data_size-4){vec0[1][3]}}, vec0[1]}),  .result(ext_out[3]));
-    over1 M511(.a(siso1_o[LLR_size-1 - 3*data_size -: data_size]),  .b(temp_LLR[3]),  .result(middle1[LLR_size-1 - 4*data_size -: data_size]));
-    over1 M521(.a(middle1[LLR_size-1 - 4*data_size -: data_size]),  .b({{(data_size-4){vec0[3][3]}}, vec0[3]}),  .result(middle2[LLR_size-1 - 4*data_size -: data_size]));
-    over1 M531(.a(middle2[LLR_size-1 - 4*data_size -: data_size]),  .b({{(data_size-4){vec0[3][3]}}, vec0[3]}),  .result(ext_out[4]));
-    over1 M112(.a(siso1_o[LLR_size-1 -: data_size]),  .b(temp_LLR1[0]), .result(middle3[LLR_size-1 -: data_size]));
-    over1 M122(.a(middle3[LLR_size-1 -: data_size]),  .b({{(data_size-4){vec0[0][3]}}, vec0[0]}),  .result(middle4[LLR_size-1 -: data_size]));
-    over1 M132(.a(middle4[LLR_size-1 -: data_size]),  .b({{(data_size-4){vec0[0][3]}}, vec0[0]}),  .result(ext1_out[0]));
-    over1 M212(.a(siso1_o[LLR_size-1 - 3*data_size -: data_size]),  .b(temp_LLR1[3]), .result(middle3[LLR_size-1 - data_size -: data_size]));
-    over1 M222(.a(middle3[LLR_size-1 - data_size -: data_size]),  .b({{(data_size-4){vec0[1][3]}}, vec0[1]}),  .result(middle4[LLR_size-1 - data_size -: data_size]));
-    over1 M232(.a(middle4[LLR_size-1 - data_size -: data_size]),  .b({{(data_size-4){vec0[1][3]}}, vec0[1]}),  .result(ext1_out[1]));
-    over1 M312(.a(siso1_o[LLR_size-1 - 2*data_size -: data_size]),  .b(temp_LLR1[2]), .result(middle3[LLR_size-1 - 2*data_size -: data_size]));
-    over1 M322(.a(middle3[LLR_size-1 - 2*data_size -: data_size]),  .b({{(data_size-4){vec0[2][3]}}, vec0[2]}),  .result(middle4[LLR_size-1 - 2*data_size -: data_size]));
-    over1 M332(.a(middle4[LLR_size-1 - 2*data_size -: data_size]),  .b({{(data_size-4){vec0[2][3]}}, vec0[2]}),  .result(ext1_out[2]));
-    over1 M412(.a(siso1_o[LLR_size-1 - 4*data_size -: data_size]),  .b(temp_LLR1[4]), .result(middle3[LLR_size-1 - 3*data_size -: data_size]));
-    over1 M422(.a(middle3[LLR_size-1 - 3*data_size -: data_size]),  .b({{(data_size-4){vec0[3][3]}}, vec0[3]}),  .result(middle4[LLR_size-1 - 3*data_size -: data_size]));
-    over1 M432(.a(middle4[LLR_size-1 - 3*data_size -: data_size]),  .b({{(data_size-4){vec0[3][3]}}, vec0[3]}),  .result(ext1_out[3]));
-    over1 M512(.a(siso1_o[LLR_size-1 - data_size -: data_size]),  .b(temp_LLR1[1]), .result(middle3[LLR_size-1 - 4*data_size -: data_size]));
-    over1 M522(.a(middle3[LLR_size-1 - 4*data_size -: data_size]),  .b({{(data_size-4){vec0[4][3]}}, vec0[4]}),  .result(middle4[LLR_size-1 - 4*data_size -: data_size]));
-    over1 M532(.a(middle4[LLR_size-1 - 4*data_size -: data_size]),  .b({{(data_size-4){vec0[4][3]}}, vec0[4]}),  .result(ext1_out[4]));
+    //over1 M111(.a(siso1_o[LLR_size-1 -: data_size]),  .b(temp_LLR[0]),  .result(middle1[LLR_size-1 -: data_size]));
+    //over1 M121(.a(middle1[LLR_size-1 -: data_size]),  .b({{(data_size-4){vec0[0][3]}}, vec0[0]}),  .result(middle2[LLR_size-1 -: data_size]));
+    //over1 M131(.a(middle2[LLR_size-1 -: data_size]),  .b({{(data_size-4){vec0[0][3]}}, vec0[0]}),  .result(ext_out[0]));
+    //over1 M211(.a(siso1_o[LLR_size-1 - 4*data_size -: data_size]),  .b(temp_LLR[4]),  .result(middle1[LLR_size-1 - data_size -: data_size]));
+    //over1 M221(.a(middle1[LLR_size-1 - data_size -: data_size]),  .b({{(data_size-4){vec0[4][3]}}, vec0[4]}),  .result(middle2[LLR_size-1 - data_size -: data_size]));
+    //over1 M231(.a(middle2[LLR_size-1 - data_size -: data_size]),  .b({{(data_size-4){vec0[4][3]}}, vec0[4]}),  .result(ext_out[1]));
+    //over1 M311(.a(siso1_o[LLR_size-1 - 2*data_size -: data_size]),  .b(temp_LLR[2]),  .result(middle1[LLR_size-1 - 2*data_size -: data_size]));
+    //over1 M321(.a(middle1[LLR_size-1 - 2*data_size -: data_size]),  .b({{(data_size-4){vec0[2][3]}}, vec0[2]}),  .result(middle2[LLR_size-1 - 2*data_size -: data_size]));
+    //over1 M331(.a(middle2[LLR_size-1 - 2*data_size -: data_size]),  .b({{(data_size-4){vec0[2][3]}}, vec0[2]}),  .result(ext_out[2]));
+    //over1 M411(.a(siso1_o[LLR_size-1 - data_size -: data_size]),  .b(temp_LLR[1]),  .result(middle1[LLR_size-1 - 3*data_size -: data_size]));
+    //over1 M421(.a(middle1[LLR_size-1 - 3*data_size -: data_size]),  .b({{(data_size-4){vec0[1][3]}}, vec0[1]}),  .result(middle2[LLR_size-1 - 3*data_size -: data_size]));
+    //over1 M431(.a(middle2[LLR_size-1 - 3*data_size -: data_size]),  .b({{(data_size-4){vec0[1][3]}}, vec0[1]}),  .result(ext_out[3]));
+    //over1 M511(.a(siso1_o[LLR_size-1 - 3*data_size -: data_size]),  .b(temp_LLR[3]),  .result(middle1[LLR_size-1 - 4*data_size -: data_size]));
+    //over1 M521(.a(middle1[LLR_size-1 - 4*data_size -: data_size]),  .b({{(data_size-4){vec0[3][3]}}, vec0[3]}),  .result(middle2[LLR_size-1 - 4*data_size -: data_size]));
+    //over1 M531(.a(middle2[LLR_size-1 - 4*data_size -: data_size]),  .b({{(data_size-4){vec0[3][3]}}, vec0[3]}),  .result(ext_out[4]));
+    //over1 M112(.a(siso1_o[LLR_size-1 -: data_size]),  .b(temp_LLR1[0]), .result(middle3[LLR_size-1 -: data_size]));
+    //over1 M122(.a(middle3[LLR_size-1 -: data_size]),  .b({{(data_size-4){vec0[0][3]}}, vec0[0]}),  .result(middle4[LLR_size-1 -: data_size]));
+    //over1 M132(.a(middle4[LLR_size-1 -: data_size]),  .b({{(data_size-4){vec0[0][3]}}, vec0[0]}),  .result(ext1_out[0]));
+    //over1 M212(.a(siso1_o[LLR_size-1 - 3*data_size -: data_size]),  .b(temp_LLR1[3]), .result(middle3[LLR_size-1 - data_size -: data_size]));
+    //over1 M222(.a(middle3[LLR_size-1 - data_size -: data_size]),  .b({{(data_size-4){vec0[1][3]}}, vec0[1]}),  .result(middle4[LLR_size-1 - data_size -: data_size]));
+    //over1 M232(.a(middle4[LLR_size-1 - data_size -: data_size]),  .b({{(data_size-4){vec0[1][3]}}, vec0[1]}),  .result(ext1_out[1]));
+    //over1 M312(.a(siso1_o[LLR_size-1 - 2*data_size -: data_size]),  .b(temp_LLR1[2]), .result(middle3[LLR_size-1 - 2*data_size -: data_size]));
+    //over1 M322(.a(middle3[LLR_size-1 - 2*data_size -: data_size]),  .b({{(data_size-4){vec0[2][3]}}, vec0[2]}),  .result(middle4[LLR_size-1 - 2*data_size -: data_size]));
+    //over1 M332(.a(middle4[LLR_size-1 - 2*data_size -: data_size]),  .b({{(data_size-4){vec0[2][3]}}, vec0[2]}),  .result(ext1_out[2]));
+    //over1 M412(.a(siso1_o[LLR_size-1 - 4*data_size -: data_size]),  .b(temp_LLR1[4]), .result(middle3[LLR_size-1 - 3*data_size -: data_size]));
+    //over1 M422(.a(middle3[LLR_size-1 - 3*data_size -: data_size]),  .b({{(data_size-4){vec0[3][3]}}, vec0[3]}),  .result(middle4[LLR_size-1 - 3*data_size -: data_size]));
+    //over1 M432(.a(middle4[LLR_size-1 - 3*data_size -: data_size]),  .b({{(data_size-4){vec0[3][3]}}, vec0[3]}),  .result(ext1_out[3]));
+    //over1 M512(.a(siso1_o[LLR_size-1 - data_size -: data_size]),  .b(temp_LLR1[1]), .result(middle3[LLR_size-1 - 4*data_size -: data_size]));
+    //over1 M522(.a(middle3[LLR_size-1 - 4*data_size -: data_size]),  .b({{(data_size-4){vec0[4][3]}}, vec0[4]}),  .result(middle4[LLR_size-1 - 4*data_size -: data_size]));
+    //over1 M532(.a(middle4[LLR_size-1 - 4*data_size -: data_size]),  .b({{(data_size-4){vec0[4][3]}}, vec0[4]}),  .result(ext1_out[4]));
     assign done_o = done;
     assign vec0_1D = sys_reg;
     assign vec1_1D = enc_reg;
@@ -216,22 +194,22 @@ module Deco(
                     // temp_LLR1_nxt[2] = siso1_o[49:40] - temp_LLR[2] - 2* { {6{vec0[2][3]}} , vec0[2]};
                     // temp_LLR1_nxt[3] = siso1_o[59:50] - temp_LLR[1] - 2* { {6{vec0[1][3]}} , vec0[1]};
                     // temp_LLR1_nxt[4] = siso1_o[39:30] - temp_LLR[3] - 2* { {6{vec0[3][3]}} , vec0[3]};
-                    
-                    //temp_LLR1_nxt[0] = siso1_o[LLR_size-1 -: data_size]               - temp_LLR[0] - {{(data_size-4){vec0[0][3]}}, vec0[0]} - {{(data_size-4){vec0[0][3]}}, vec0[0]};
-                    //temp_LLR1_nxt[1] = siso1_o[LLR_size-1 - 4*data_size -: data_size] - temp_LLR[4] - {{(data_size-4){vec0[4][3]}}, vec0[4]} - {{(data_size-4){vec0[4][3]}}, vec0[4]};
-                    //temp_LLR1_nxt[2] = siso1_o[LLR_size-1 - 2*data_size -: data_size] - temp_LLR[2] - {{(data_size-4){vec0[2][3]}}, vec0[2]} - {{(data_size-4){vec0[2][3]}}, vec0[2]};
-                    //temp_LLR1_nxt[3] = siso1_o[LLR_size-1 - data_size -: data_size]   - temp_LLR[1] - {{(data_size-4){vec0[1][3]}}, vec0[1]} - {{(data_size-4){vec0[1][3]}}, vec0[1]};
-                    //temp_LLR1_nxt[4] = siso1_o[LLR_size-1 - 3*data_size -: data_size] - temp_LLR[3] - {{(data_size-4){vec0[3][3]}}, vec0[3]} - {{(data_size-4){vec0[3][3]}}, vec0[3]};
-                    //temp_LLR1_nxt[5] = {(data_size){1'b0}};
-                    //temp_LLR1_nxt[6] = {(data_size){1'b0}};
-
-                    temp_LLR1_nxt[0] = ext_out[0];
-                    temp_LLR1_nxt[1] = ext_out[1];
-                    temp_LLR1_nxt[2] = ext_out[2];
-                    temp_LLR1_nxt[3] = ext_out[3];
-                    temp_LLR1_nxt[4] = ext_out[4];
+            
+                    temp_LLR1_nxt[0] = siso1_o[LLR_size-1 -: data_size]               - temp_LLR[0] - {{(data_size-4){vec0[0][3]}}, vec0[0]} - {{(data_size-4){vec0[0][3]}}, vec0[0]};
+                    temp_LLR1_nxt[1] = siso1_o[LLR_size-1 - 4*data_size -: data_size] - temp_LLR[4] - {{(data_size-4){vec0[4][3]}}, vec0[4]} - {{(data_size-4){vec0[4][3]}}, vec0[4]};
+                    temp_LLR1_nxt[2] = siso1_o[LLR_size-1 - 2*data_size -: data_size] - temp_LLR[2] - {{(data_size-4){vec0[2][3]}}, vec0[2]} - {{(data_size-4){vec0[2][3]}}, vec0[2]};
+                    temp_LLR1_nxt[3] = siso1_o[LLR_size-1 - data_size -: data_size]   - temp_LLR[1] - {{(data_size-4){vec0[1][3]}}, vec0[1]} - {{(data_size-4){vec0[1][3]}}, vec0[1]};
+                    temp_LLR1_nxt[4] = siso1_o[LLR_size-1 - 3*data_size -: data_size] - temp_LLR[3] - {{(data_size-4){vec0[3][3]}}, vec0[3]} - {{(data_size-4){vec0[3][3]}}, vec0[3]};
                     temp_LLR1_nxt[5] = {(data_size){1'b0}};
                     temp_LLR1_nxt[6] = {(data_size){1'b0}};
+
+                    //temp_LLR1_nxt[0] = ext_out[0];
+                    //temp_LLR1_nxt[1] = ext_out[1];
+                    //temp_LLR1_nxt[2] = ext_out[2];
+                    //temp_LLR1_nxt[3] = ext_out[3];
+                    //temp_LLR1_nxt[4] = ext_out[4];
+                    //temp_LLR1_nxt[5] = {(data_size){1'b0}};
+                    //temp_LLR1_nxt[6] = {(data_size){1'b0}};
                     ext_reg_nxt  = {temp_LLR1_nxt[0], temp_LLR1_nxt[1], temp_LLR1_nxt[2], temp_LLR1_nxt[3], temp_LLR1_nxt[4], temp_LLR1_nxt[5], temp_LLR1_nxt[6]};
 
                     read_counter_nxt = 0;
@@ -257,21 +235,21 @@ module Deco(
                     // temp_LLR_nxt[3] = siso1_o[29:20] - temp_LLR1[4] - 2* { {6{vec0[3][3]}},  vec0[3]};
                     // temp_LLR_nxt[4] = siso1_o[59:50] - temp_LLR1[1] - 2* { {6{vec0[4][3]}},  vec0[4]};
                     
-                    //temp_LLR_nxt[0] = siso1_o[LLR_size-1 -: data_size]               - temp_LLR1[0] - {{(data_size-4){vec0[0][3]}}, vec0[0]} - {{(data_size-4){vec0[0][3]}}, vec0[0]};
-                    //temp_LLR_nxt[1] = siso1_o[LLR_size-1 - 3*data_size -: data_size] - temp_LLR1[3] - {{(data_size-4){vec0[1][3]}}, vec0[1]} - {{(data_size-4){vec0[1][3]}}, vec0[1]};
-                    //temp_LLR_nxt[2] = siso1_o[LLR_size-1 - 2*data_size -: data_size] - temp_LLR1[2] - {{(data_size-4){vec0[2][3]}}, vec0[2]} - {{(data_size-4){vec0[2][3]}}, vec0[2]};
-                    //temp_LLR_nxt[3] = siso1_o[LLR_size-1 - 4*data_size -: data_size] - temp_LLR1[4] - {{(data_size-4){vec0[3][3]}}, vec0[3]} - {{(data_size-4){vec0[3][3]}}, vec0[3]};
-                    //temp_LLR_nxt[4] = siso1_o[LLR_size-1 - data_size -: data_size]   - temp_LLR1[1] - {{(data_size-4){vec0[4][3]}}, vec0[4]} - {{(data_size-4){vec0[4][3]}}, vec0[4]};
-                    //temp_LLR_nxt[5] = {(data_size){1'b0}};
-                    //temp_LLR_nxt[6] = {(data_size){1'b0}};
-
-                    temp_LLR_nxt[0] = ext1_out[0];
-                    temp_LLR_nxt[1] = ext1_out[1];
-                    temp_LLR_nxt[2] = ext1_out[2];
-                    temp_LLR_nxt[3] = ext1_out[3];
-                    temp_LLR_nxt[4] = ext1_out[4];
+                    temp_LLR_nxt[0] = siso1_o[LLR_size-1 -: data_size]               - temp_LLR1[0] - {{(data_size-4){vec0[0][3]}}, vec0[0]} - {{(data_size-4){vec0[0][3]}}, vec0[0]};
+                    temp_LLR_nxt[1] = siso1_o[LLR_size-1 - 3*data_size -: data_size] - temp_LLR1[3] - {{(data_size-4){vec0[1][3]}}, vec0[1]} - {{(data_size-4){vec0[1][3]}}, vec0[1]};
+                    temp_LLR_nxt[2] = siso1_o[LLR_size-1 - 2*data_size -: data_size] - temp_LLR1[2] - {{(data_size-4){vec0[2][3]}}, vec0[2]} - {{(data_size-4){vec0[2][3]}}, vec0[2]};
+                    temp_LLR_nxt[3] = siso1_o[LLR_size-1 - 4*data_size -: data_size] - temp_LLR1[4] - {{(data_size-4){vec0[3][3]}}, vec0[3]} - {{(data_size-4){vec0[3][3]}}, vec0[3]};
+                    temp_LLR_nxt[4] = siso1_o[LLR_size-1 - data_size -: data_size]   - temp_LLR1[1] - {{(data_size-4){vec0[4][3]}}, vec0[4]} - {{(data_size-4){vec0[4][3]}}, vec0[4]};
                     temp_LLR_nxt[5] = {(data_size){1'b0}};
                     temp_LLR_nxt[6] = {(data_size){1'b0}};
+
+                    //temp_LLR_nxt[0] = ext1_out[0];
+                    //temp_LLR_nxt[1] = ext1_out[1];
+                    //temp_LLR_nxt[2] = ext1_out[2];
+                    //temp_LLR_nxt[3] = ext1_out[3];
+                    //temp_LLR_nxt[4] = ext1_out[4];
+                    //temp_LLR_nxt[5] = {(data_size){1'b0}};
+                    //temp_LLR_nxt[6] = {(data_size){1'b0}};
                     
                     ext_reg_nxt  = {temp_LLR_nxt[0], temp_LLR_nxt[1], temp_LLR_nxt[2], temp_LLR_nxt[3], temp_LLR_nxt[4], temp_LLR_nxt[5], temp_LLR_nxt[6]};
                     read_counter_nxt = 0;

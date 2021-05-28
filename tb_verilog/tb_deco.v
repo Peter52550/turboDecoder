@@ -1,5 +1,5 @@
 `timescale 1ns/10ps
-`define CYCLE    10
+`define CYCLE    20
 `define INPUT    "../data/golden.dat"                         
 `define EXPECT   "../data/actual.dat"
 
