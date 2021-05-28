@@ -1,0 +1,286 @@
+ncverilog: 15.20-s039: (c) Copyright 1995-2017 Cadence Design Systems, Inc.
+TOOL:	ncverilog	15.20-s039: Started on Mar 25, 2021 at 18:30:22 CST
+ncverilog
+	HW3_alu_tb.v
+	CHIP.v
+	-v
+	fsa0m_a_generic_core_21.lib.src
+	fsa0m_a_t33_generic_io_21.lib.src
+	+define+SDF
+file: HW3_alu_tb.v
+	module worklib.ALU_test:v
+		errors: 0, warnings: 0
+file: CHIP.v
+	module worklib.alu_DW01_add_0:v
+		errors: 0, warnings: 0
+	module worklib.alu_DW01_sub_0:v
+		errors: 0, warnings: 0
+	module worklib.alu_DW01_inc_0:v
+		errors: 0, warnings: 0
+	module worklib.alu_DW_mult_uns_0:v
+		errors: 0, warnings: 0
+	module worklib.alu:v
+		errors: 0, warnings: 0
+	module worklib.CHIP:v
+		errors: 0, warnings: 0
+file: fsa0m_a_t33_generic_io_21.lib.src
+	module worklib.XMC:src
+		errors: 0, warnings: 0
+	module worklib.XMD:src
+		errors: 0, warnings: 0
+	module worklib.YA2GSC:src
+		errors: 0, warnings: 0
+	module worklib.YA2GSD:src
+		errors: 0, warnings: 0
+	module worklib.ZMA2GSC:src
+		errors: 0, warnings: 0
+	module worklib.ZMA2GSD:src
+		errors: 0, warnings: 0
+	module worklib.dffrb_pri:src
+		errors: 0, warnings: 0
+	primitive worklib.dffrsb_udp:src
+		errors: 0, warnings: 0
+	module worklib.dffsb_pri:src
+		errors: 0, warnings: 0
+	primitive worklib.dlhrb_udp:src
+		errors: 0, warnings: 0
+	primitive worklib.dlhrsb_udp:src
+		errors: 0, warnings: 0
+	primitive worklib.dlhsb_udp:src
+		errors: 0, warnings: 0
+	primitive worklib.jkffrsb_udp:src
+		errors: 0, warnings: 0
+	primitive worklib.mux2_udp:src
+		errors: 0, warnings: 0
+	primitive worklib.mux3_udp:src
+		errors: 0, warnings: 0
+	primitive worklib.mux4_udp:src
+		errors: 0, warnings: 0
+	module worklib.pulldown_IO:src
+		errors: 0, warnings: 0
+	module worklib.pullup2_down_IO:src
+		errors: 0, warnings: 0
+	module worklib.pullup_IO:src
+		errors: 0, warnings: 0
+	module worklib.pullup_down_IO:src
+		errors: 0, warnings: 0
+	module worklib.pullup_down_IO_IEO:src
+		errors: 0, warnings: 0
+	module worklib.pullup_down_IO_PSCN:src
+		errors: 0, warnings: 0
+	module worklib.pullup_down_ene_IO:src
+		errors: 0, warnings: 0
+	module worklib.pullup_down_keep_IO:src
+		errors: 0, warnings: 0
+	module worklib.pullup_down_keep_IO_03us:src
+		errors: 0, warnings: 0
+	module worklib.pullup_down_keep_IO_IE:src
+		errors: 0, warnings: 0
+	module worklib.pullup_down_keep_IO_IG:src
+		errors: 0, warnings: 0
+	module worklib.pullup_inv_IO:src
+		errors: 0, warnings: 0
+	primitive worklib.tffrb_udp:src
+		errors: 0, warnings: 0
+	primitive worklib.tffrsb_udp:src
+		errors: 0, warnings: 0
+	primitive worklib.tffsb_udp:src
+		errors: 0, warnings: 0
+file: fsa0m_a_generic_core_21.lib.src
+	module fsa0m_a_generic_core_21.AN2:src
+		errors: 0, warnings: 0
+	module fsa0m_a_generic_core_21.AO112T:src
+		errors: 0, warnings: 0
+	module fsa0m_a_generic_core_21.AO12:src
+		errors: 0, warnings: 0
+	module fsa0m_a_generic_core_21.AO12T:src
+		errors: 0, warnings: 0
+	module fsa0m_a_generic_core_21.AO13S:src
+		errors: 0, warnings: 0
+	module fsa0m_a_generic_core_21.AO22:src
+		errors: 0, warnings: 0
+	module fsa0m_a_generic_core_21.AO222:src
+		errors: 0, warnings: 0
+	module fsa0m_a_generic_core_21.AO222S:src
+		errors: 0, warnings: 0
+	module fsa0m_a_generic_core_21.AOI22S:src
+		errors: 0, warnings: 0
+	module fsa0m_a_generic_core_21.FA1S:src
+		errors: 0, warnings: 0
+	module fsa0m_a_generic_core_21.HA1:src
+		errors: 0, warnings: 0
+	module fsa0m_a_generic_core_21.INV12CK:src
+		errors: 0, warnings: 0
+	module fsa0m_a_generic_core_21.INV1S:src
+		errors: 0, warnings: 0
+	module fsa0m_a_generic_core_21.INV6CK:src
+		errors: 0, warnings: 0
+	module fsa0m_a_generic_core_21.MAOI1:src
+		errors: 0, warnings: 0
+	module fsa0m_a_generic_core_21.MOAI1S:src
+		errors: 0, warnings: 0
+	module fsa0m_a_generic_core_21.ND2:src
+		errors: 0, warnings: 0
+	module fsa0m_a_generic_core_21.ND3:src
+		errors: 0, warnings: 0
+	module fsa0m_a_generic_core_21.NR2:src
+		errors: 0, warnings: 0
+	module fsa0m_a_generic_core_21.OA12:src
+		errors: 0, warnings: 0
+	module fsa0m_a_generic_core_21.OA222:src
+		errors: 0, warnings: 0
+	module fsa0m_a_generic_core_21.OAI222S:src
+		errors: 0, warnings: 0
+	module fsa0m_a_generic_core_21.OAI22S:src
+		errors: 0, warnings: 0
+	module fsa0m_a_generic_core_21.OR2:src
+		errors: 0, warnings: 0
+	module fsa0m_a_generic_core_21.OR2T:src
+		errors: 0, warnings: 0
+	module fsa0m_a_generic_core_21.OR3B2T:src
+		errors: 0, warnings: 0
+	module fsa0m_a_generic_core_21.QDFFRBN:src
+		errors: 0, warnings: 0
+	module fsa0m_a_generic_core_21.TIE0:src
+		errors: 0, warnings: 0
+	module fsa0m_a_generic_core_21.TIE1:src
+		errors: 0, warnings: 0
+	module fsa0m_a_generic_core_21.XNR2HS:src
+		errors: 0, warnings: 0
+	module fsa0m_a_generic_core_21.XOR2HS:src
+		errors: 0, warnings: 0
+		Caching library 'fsa0m_a_generic_core_21' ....... Done
+		Caching library 'worklib' ....... Done
+	Elaborating the design hierarchy:
+   alu_DW01_add_0 add_64 (.A({ n2,
+                       |
+ncelab: *W,CUVWSP (./CHIP.v,1094|23): 1 output port was not connected:
+ncelab: (./CHIP.v,20): CO
+
+   alu_DW01_sub_0 r319 (.A({ n2,
+                     |
+ncelab: *W,CUVWSP (./CHIP.v,1101|21): 1 output port was not connected:
+ncelab: (./CHIP.v,79): CO
+
+	Building instance overlay tables: .................... Done
+	Generating native compiled code:
+		fsa0m_a_generic_core_21.AO112T:src <0x040006d2>
+			streams:   0, words:     0
+		fsa0m_a_generic_core_21.AO12:src <0x0e00bc88>
+			streams:   0, words:     0
+		fsa0m_a_generic_core_21.AO12T:src <0x1b3d4a32>
+			streams:   0, words:     0
+		fsa0m_a_generic_core_21.AO13S:src <0x08675638>
+			streams:   0, words:     0
+		fsa0m_a_generic_core_21.AO222:src <0x423a8097>
+			streams:   0, words:     0
+		fsa0m_a_generic_core_21.AO222S:src <0x2539a23a>
+			streams:   0, words:     0
+		fsa0m_a_generic_core_21.AO22:src <0x2fd424b1>
+			streams:   0, words:     0
+		fsa0m_a_generic_core_21.AOI22S:src <0x2bee49b5>
+			streams:   0, words:     0
+		fsa0m_a_generic_core_21.FA1S:src <0x782cada0>
+			streams:   0, words:     0
+		fsa0m_a_generic_core_21.HA1:src <0x13965e59>
+			streams:   0, words:     0
+		fsa0m_a_generic_core_21.MAOI1:src <0x06edc87a>
+			streams:   0, words:     0
+		fsa0m_a_generic_core_21.MOAI1S:src <0x6e3781e9>
+			streams:   0, words:     0
+		fsa0m_a_generic_core_21.OA12:src <0x11cee493>
+			streams:   0, words:     0
+		fsa0m_a_generic_core_21.OA222:src <0x62a4ccbd>
+			streams:   0, words:     0
+		fsa0m_a_generic_core_21.OAI222S:src <0x31cc2a97>
+			streams:   0, words:     0
+		fsa0m_a_generic_core_21.OAI22S:src <0x68cd85d7>
+			streams:   0, words:     0
+		fsa0m_a_generic_core_21.QDFFRBN:src <0x4a21ad9f>
+			streams:   0, words:     0
+		fsa0m_a_generic_core_21.XNR2HS:src <0x252ff389>
+			streams:   0, words:     0
+		fsa0m_a_generic_core_21.XOR2HS:src <0x58e2beb6>
+			streams:   0, words:     0
+		worklib.ALU_test:v <0x2dd95dc9>
+			streams:  11, words: 13071
+		worklib.XMC:src <0x527e46ee>
+			streams:   0, words:     0
+		worklib.XMD:src <0x7eead09e>
+			streams:   0, words:     0
+		worklib.YA2GSC:src <0x27b03ef2>
+			streams:   0, words:     0
+		worklib.YA2GSD:src <0x7d9adc30>
+			streams:   0, words:     0
+		worklib.ZMA2GSC:src <0x15a784d7>
+			streams:   0, words:     0
+		worklib.ZMA2GSD:src <0x3aa67272>
+			streams:   0, words:     0
+		worklib.alu:v <0x087eb560>
+			streams:   0, words:     0
+		worklib.pulldown_IO:src <0x0aa59559>
+			streams:   4, words:  2123
+		worklib.pullup2_down_IO:src <0x07e1d584>
+			streams:   9, words:  5142
+		worklib.pullup_IO:src <0x5f6f63f4>
+			streams:   4, words:  2141
+		worklib.pullup_down_IO:src <0x3c5e9948>
+			streams:   9, words:  5142
+		worklib.pullup_down_IO_IEO:src <0x43f2243b>
+			streams:  16, words:  8311
+		worklib.pullup_down_IO_PSCN:src <0x0dbf7cdf>
+			streams:   6, words:  6167
+		worklib.pullup_down_ene_IO:src <0x4be55d29>
+			streams:   9, words:  5142
+		worklib.pullup_down_keep_IO:src <0x0cbc686e>
+			streams:  10, words:  6127
+		worklib.pullup_down_keep_IO_03us:src <0x18ccd3d9>
+			streams:  10, words:  6126
+		worklib.pullup_down_keep_IO_IE:src <0x224176c5>
+			streams:  10, words:  6262
+		worklib.pullup_down_keep_IO_IG:src <0x7ed46d30>
+			streams:  10, words:  6262
+		worklib.pullup_inv_IO:src <0x533d415a>
+			streams:   4, words:  2141
+	Building instance specific data structures.
+	Loading native compiled code:     .................... Done
+	Design hierarchy summary:
+		                    Instances  Unique
+		Modules:                  381      58
+		UDPs:                      38      11
+		Primitives:              1221      14
+		Timing outputs:           430      27
+		Registers:                 74      44
+		Scalar wires:             523       -
+		Expanded wires:            19       3
+		Named events:              41      37
+		Always blocks:             72      66
+		Initial blocks:             7       7
+		Pseudo assignments:         1       1
+		Timing checks:            342      40
+		Delayed tcheck signals:   114      39
+		Simulation timescale:     1ps
+	Writing initial simulation snapshot: worklib.ALU_test:v
+Loading snapshot worklib.ALU_test:v .................... Done
+*Verdi* Loading libsscore_ius152.so
+ncsim> source /usr/cad/cadence/INCISIV/cur/tools/inca/files/ncsimrc
+ncsim> run
+ncsim: *W,DVEXACC: some objects excluded from $dumpvars due to access restrictions, use +access+r on command line for access to all objects.
+            File: ./HW3_alu_tb.v, line = 55, pos = 9
+           Scope: ALU_test
+            Time: 0 FS + 0
+
+---------------------------------------------
+
+All data have been generated successfully!
+
+You will get 80 score in this gate-level netlist!
+
+-------------------PASS-------------------
+
+---------------------------------------------
+
+Simulation complete via $finish(1) at time 825 NS + 0
+./HW3_alu_tb.v:111       $finish;
+ncsim> exit
+TOOL:	ncverilog	15.20-s039: Exiting on Mar 25, 2021 at 18:30:23 CST  (total: 00:00:01)
