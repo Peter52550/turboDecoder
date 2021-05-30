@@ -10,7 +10,7 @@ module Deco(
              data_i,
              data_o,
              start_i,
-             done_o,
+             done_o
 );
 
     parameter MAX_ITER          = 10;

@@ -1,6 +1,6 @@
 ###################################################################
 
-# Created by write_sdc on Sat May 29 01:14:34 2021
+# Created by write_sdc on Sat May 29 12:12:03 2021
 
 ###################################################################
 set sdc_version 2.0
@@ -46,7 +46,6 @@ set_input_delay -clock clk_p_i  -max 1  [get_ports {data_i[2]}]
 set_input_delay -clock clk_p_i  -max 1  [get_ports {data_i[1]}]
 set_input_delay -clock clk_p_i  -max 1  [get_ports {data_i[0]}]
 set_input_delay -clock clk_p_i  -max 1  [get_ports start_i]
-set_input_delay -clock clk_p_i  -max 1  [get_ports Port7]
 set_output_delay -clock clk_p_i  -min 0.5  [get_ports {data_o[4]}]
 set_output_delay -clock clk_p_i  -min 0.5  [get_ports {data_o[3]}]
 set_output_delay -clock clk_p_i  -min 0.5  [get_ports {data_o[2]}]
@@ -77,4 +76,3 @@ set_drive 1  [get_ports {data_i[2]}]
 set_drive 1  [get_ports {data_i[1]}]
 set_drive 1  [get_ports {data_i[0]}]
 set_drive 1  [get_ports start_i]
-set_drive 1  [get_ports Port7]
