@@ -54,15 +54,15 @@ interleaver = random.sample(range(0, block_size), block_size)
 encoder = TurboEncoder(interleaver)
 decoder = TurboDecoder(interleaver)
 input_vector  = []
-for n in range(num):
-    # input_vector = np.random.randint(2, size=block_size)
-    input_vector = np.array(list(np.binary_repr(n).zfill(5))).astype(np.int8)
-    #print("original", [i for i in input_vector])
-    encoded_vector = encoder.execute(input_vector)
+for s in SNR:
+    # channel = AWGN(SNR)
+    channel = AWGN(s)
 
-    for s in SNR:
-        # channel = AWGN(SNR)
-        channel = AWGN(s)
+    for n in range(num):
+        # input_vector = np.random.randint(2, size=block_size)
+        input_vector = np.array(list(np.binary_repr(n).zfill(5))).astype(np.int8)
+        #print("original", [i for i in input_vector])
+        encoded_vector = encoder.execute(input_vector)
 
         channel_vector = list(map(float, encoded_vector))
         channel_vector = channel.convert_to_symbols(channel_vector)

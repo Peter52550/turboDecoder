@@ -1,5 +1,5 @@
 `timescale 1ns/10ps
-`define CYCLE    10
+`define CYCLE    20
 `define INPUT    "../data/golden.dat"                         
 `define EXPECT   "../data/actual.dat"
 `define SDFFILE  "./deco.sdf"	          // Modify your sdf file name
@@ -7,7 +7,7 @@
 module decoder_tb;
 
 parameter ITERATE       = 10'd16;
-parameter INPUT_SIZE    = 8'd160;
+parameter INPUT_SIZE    = 672;
 
 // parameter  [15:0] data_arr [0:4] = '{
 //         16'b1111_0010_1100_1111,

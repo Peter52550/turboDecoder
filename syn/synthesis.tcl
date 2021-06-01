@@ -10,7 +10,7 @@ link
 
 ############in sdc file
 # Set the Optimization Constraints 
-create_clock -period 10 -name "clk_p_i" -waveform {0 5} "clk_p_i"
+create_clock -period 20 -name "clk_p_i" -waveform {0 10} "clk_p_i"
 set_dont_touch_network [get_ports clk_p_i]
 set_fix_hold [get_clocks clk_p_i]
 
