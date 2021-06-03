@@ -1,0 +1,221 @@
+Loading db file '/home/raid7_2/userb07/b07163/turboDecoder/syn/fsa0m_a_generic_core_tt1p8v25c.db'
+Information: Propagating switching activity (low effort zero delay simulation). (PWR-6)
+Warning: Design has unannotated primary inputs. (PWR-414)
+Warning: Design has unannotated sequential cell outputs. (PWR-415)
+ 
+****************************************
+Report : power
+        -analysis_effort low
+Design : Deco
+Version: N-2017.09-SP2
+Date   : Thu Jun  3 00:39:42 2021
+****************************************
+
+
+Library(s) Used:
+
+    fsa0m_a_generic_core_tt1p8v25c (File: /home/raid7_2/userb07/b07163/turboDecoder/syn/fsa0m_a_generic_core_tt1p8v25c.db)
+
+
+Operating Conditions: WCCOM   Library: fsa0m_a_generic_core_ss1p62v125c
+Wire Load Model Mode: enclosed
+
+Design        Wire Load Model            Library
+------------------------------------------------
+Deco                   G200K             fsa0m_a_generic_core_tt1p8v25c
+Siso                   enG50K            fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_6        enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_7        enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_8        enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_9        enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_10       enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_11       enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_28       enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_29       enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_30       enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_31       enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_32       enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_33       enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_34       enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_35       enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_52       enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_53       enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_54       enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_55       enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_56       enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_57       enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_58       enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_59       enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_76       enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_77       enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_78       enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_79       enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_80       enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_81       enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_82       enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_83       enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_100      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_101      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_102      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_103      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_104      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_105      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_106      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_107      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_124      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_125      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_126      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_127      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_128      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_129      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_130      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_131      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Deco_DW01_sub_0        enG5K             fsa0m_a_generic_core_tt1p8v25c
+Deco_DW01_sub_1        enG5K             fsa0m_a_generic_core_tt1p8v25c
+Deco_DW01_sub_2        enG5K             fsa0m_a_generic_core_tt1p8v25c
+Deco_DW01_sub_3        enG5K             fsa0m_a_generic_core_tt1p8v25c
+Deco_DW01_sub_4        enG5K             fsa0m_a_generic_core_tt1p8v25c
+Deco_DW01_sub_5        enG5K             fsa0m_a_generic_core_tt1p8v25c
+Deco_DW01_sub_6        enG5K             fsa0m_a_generic_core_tt1p8v25c
+Deco_DW01_sub_7        enG5K             fsa0m_a_generic_core_tt1p8v25c
+Deco_DW01_sub_8        enG5K             fsa0m_a_generic_core_tt1p8v25c
+Deco_DW01_sub_9        enG5K             fsa0m_a_generic_core_tt1p8v25c
+Deco_DW01_sub_10       enG5K             fsa0m_a_generic_core_tt1p8v25c
+Deco_DW01_sub_11       enG5K             fsa0m_a_generic_core_tt1p8v25c
+Deco_DW01_sub_12       enG5K             fsa0m_a_generic_core_tt1p8v25c
+Deco_DW01_sub_13       enG5K             fsa0m_a_generic_core_tt1p8v25c
+Deco_DW01_sub_14       enG5K             fsa0m_a_generic_core_tt1p8v25c
+Deco_DW01_sub_15       enG5K             fsa0m_a_generic_core_tt1p8v25c
+Deco_DW01_sub_16       enG5K             fsa0m_a_generic_core_tt1p8v25c
+Deco_DW01_sub_17       enG5K             fsa0m_a_generic_core_tt1p8v25c
+Deco_DW01_sub_18       enG5K             fsa0m_a_generic_core_tt1p8v25c
+Deco_DW01_sub_19       enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_sub_6        enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_240      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_241      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_242      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_243      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_244      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_245      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_246      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_247      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_248      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_249      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_250      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_251      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_252      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_253      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_254      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_255      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_256      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_257      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_258      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_259      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_260      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_261      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_262      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_263      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_264      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_265      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_266      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_267      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_268      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_269      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_270      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_271      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_272      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_273      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_274      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_275      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_276      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_277      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_278      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_279      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_280      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_281      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_282      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_283      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_284      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_285      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_286      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_287      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_288      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_289      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_290      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_291      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_292      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_293      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_294      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_295      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_296      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_297      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_298      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_299      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_300      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_301      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_302      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_303      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_304      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_305      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_306      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_307      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_308      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_309      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_310      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_311      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_312      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_313      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_314      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_315      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_316      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_317      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_318      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_319      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_320      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_321      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_322      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_323      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_324      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_325      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_326      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_327      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_328      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_329      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_330      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_331      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_332      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_333      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_334      enG5K             fsa0m_a_generic_core_tt1p8v25c
+Siso_DW01_add_335      enG5K             fsa0m_a_generic_core_tt1p8v25c
+
+
+Global Operating Voltage = 1.62 
+Power-specific unit information :
+    Voltage Units = 1V
+    Capacitance Units = 1.000000pf
+    Time Units = 1ns
+    Dynamic Power Units = 1mW    (derived from V,C,T units)
+    Leakage Power Units = 1pW
+
+
+  Cell Internal Power  =   7.6322 mW   (86%)
+  Net Switching Power  =   1.2086 mW   (14%)
+                         ---------
+Total Dynamic Power    =   8.8408 mW  (100%)
+
+Cell Leakage Power     =   1.2742 uW
+
+
+                 Internal         Switching           Leakage            Total
+Power Group      Power            Power               Power              Power   (   %    )  Attrs
+--------------------------------------------------------------------------------------------------
+io_pad             0.0000            0.0000            0.0000            0.0000  (   0.00%)
+memory             0.0000            0.0000            0.0000            0.0000  (   0.00%)
+black_box          0.0000            0.0000            0.0000            0.0000  (   0.00%)
+clock_network      0.0000            0.0000            0.0000            0.0000  (   0.00%)
+register           7.1173        6.0468e-02        3.1367e+05            7.1781  (  81.18%)
+sequential         0.0000            0.0000            0.0000            0.0000  (   0.00%)
+combinational      0.5149            1.1481        9.6054e+05            1.6639  (  18.82%)
+--------------------------------------------------------------------------------------------------
+Total              7.6322 mW         1.2086 mW     1.2742e+06 pW         8.8420 mW
+1

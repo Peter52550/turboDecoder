@@ -2,7 +2,7 @@
 `define CYCLE    20
 `define INPUT    "../data/golden.dat"                         
 `define EXPECT   "../data/actual.dat"
-`define SDFFILE  "./deco.sdf"	          // Modify your sdf file name
+`define SDFFILE  "../syn/deco.sdf"	          // Modify your sdf file name
 
 module decoder_tb;
 
@@ -62,9 +62,19 @@ initial begin
     #2.5 rst = 1'b0;                       
     #7.5 rst = 1'b1;
 
+    #(`CYCLE*INPUT_SIZE*200)
+    $display("============================================================\n");
+    $display("Simulation time is longer than expected.");
+    $display("The test result is .....FAIL :(\n");
+    $display("============================================================\n");
+    $finish;
 end
 
 always begin #(`CYCLE/2) clk = ~clk; end
+
+`ifdef SDF
+    initial $sdf_annotate(`SDFFILE, decorder0);
+`endif
 
 initial begin
 	$fsdbDumpfile("decoder.fsdb");
@@ -123,28 +133,28 @@ end
 always @(posedge clk)begin
     if(done_o) begin
         if(out !== out_temp) begin
-            $display("ERROR at %d:output %b !=expect %b ", pattern_num, out, out_temp);
+            $display("ERROR AT %d:OUTPUT %b !=EXPECT %b ", pattern_num, out, out_temp);
             $fdisplay(out_error_f, "ERROR at %d:output %b !=expect %b ",pattern_num, out, out_temp);
             err = err + 1;
         end
         else begin
-            $display("GREAT! You get %b and the output is %b", out, out_temp);
+            $display("Good! at %d:output %b ==expect %b ", pattern_num, out, out_temp);
         end
         $fdisplay(out_f, "%d    output %b    expect %b ",pattern_num, out, out_temp);
         pattern_num = pattern_num + 1; 
-        $display("---------------------------------------------\n");
+        //$display("---------------------------------------------\n");
     end
 end
 initial begin
       @(posedge stop)      
       if(stop) begin
             if(out !== out_temp) begin
-                $display("ERROR at %d:output %b !=expect %b ", pattern_num, out, out_temp);
+                $display("ERROR AT %d:OUTPUT %b !=EXPECT %b ", pattern_num, out, out_temp);
                 $fdisplay(out_error_f, "ERROR at %d:output %b !=expect %b ",pattern_num, out, out_temp);
                 err = err + 1;
             end
             else begin
-                $display("GREAT! You get %b and the output is %b", out, out_temp);
+                $display("Good! at %d:output %b ==expect %b ", pattern_num, out, out_temp);
             end
             $fdisplay(out_f, "%d    output %b    expect %b ",pattern_num, out, out_temp);
             pattern_num = pattern_num + 1; 

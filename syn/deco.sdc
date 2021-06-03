@@ -1,6 +1,6 @@
 ###################################################################
 
-# Created by write_sdc on Sun May 30 21:56:34 2021
+# Created by write_sdc on Thu Jun  3 00:40:45 2021
 
 ###################################################################
 set sdc_version 2.0
@@ -19,7 +19,7 @@ set_load -pin_load 1 [get_ports {data_o[2]}]
 set_load -pin_load 1 [get_ports {data_o[1]}]
 set_load -pin_load 1 [get_ports {data_o[0]}]
 set_load -pin_load 1 [get_ports done_o]
-create_clock [get_ports clk_p_i]  -period 20  -waveform {0 10}
+create_clock [get_ports clk_p_i]  -period 10  -waveform {0 5}
 set_clock_latency 0.5  [get_clocks clk_p_i]
 set_clock_uncertainty 0.1  [get_clocks clk_p_i]
 set_input_delay -clock clk_p_i  -max 1  [get_ports clk_p_i]
