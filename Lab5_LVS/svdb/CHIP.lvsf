@@ -1,0 +1,9 @@
+# Automagically generated file: Please do not edit!
+lvs_LvsOutFile RUNDIR /home/raid5_1/user01/r01014/ICLab/testA_v2/LVS
+lvs_LvsfVersion 2
+lvs_LvsInputSummary {0 0 0}
+lvs_LvsComparisonSummary {3 0 0 31}
+lvs_LvsOutFile LVS_REPORT lvs_test.rep
+lvs_LvsOutFile SOURCE_NETLIST CHIP.spi
+lvs_LvsOutFile RULES_FILE G-DF-MIXED_MODE_RFCMOS18-1.8V_3.3V-1P6M-MMC_CALIBRE-LVS-2.1-P8.txt
+lvs_LvsRunTimes 1403680954 1403680954

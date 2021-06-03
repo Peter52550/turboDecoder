@@ -1,0 +1,37 @@
+# CALIBRE-LVS DISCREPANCY VIEWER TCL FILE 
+# FILE: svdb/CHIP.dv
+dv_start matched
+dv_cell {AN2} {AN2} lvsbox
+dv_cell {AO112} {AO112} lvsbox
+dv_cell {AO222} {AO222} lvsbox
+dv_cell {AOI12HS} {AOI12HS} lvsbox
+dv_cell {AOI22S} {AOI22S} lvsbox
+dv_cell {BUF12CK} {BUF12CK} lvsbox
+dv_cell {BUF2} {BUF2} lvsbox
+dv_cell {BUF2CK} {BUF2CK} lvsbox
+dv_cell {BUF3} {BUF3} lvsbox
+dv_cell {FA1S} {FA1S} lvsbox
+dv_cell {HA1} {HA1} lvsbox
+dv_cell {INV1S} {INV1S} lvsbox
+dv_cell {MAOI1} {MAOI1} lvsbox
+dv_cell {MOAI1S} {MOAI1S} lvsbox
+dv_cell {ND2} {ND2} lvsbox
+dv_cell {ND3} {ND3} lvsbox
+dv_cell {NR2} {NR2} lvsbox
+dv_cell {NR3} {NR3} lvsbox
+dv_cell {OA222} {OA222} lvsbox
+dv_cell {OAI112HS} {OAI112HS} lvsbox
+dv_cell {OAI12HS} {OAI12HS} lvsbox
+dv_cell {OR2} {OR2} lvsbox
+dv_cell {OR3B2} {OR3B2} lvsbox
+dv_cell {QDFFRBN} {QDFFRBN} lvsbox
+dv_cell {QDFFRBT} {QDFFRBT} lvsbox
+dv_cell {TIE0} {TIE0} lvsbox
+dv_cell {TIE1} {TIE1} lvsbox
+dv_cell {XMC} {XMC} lvsbox
+dv_cell {XNR2HS} {XNR2HS} lvsbox
+dv_cell {XOR2HS} {XOR2HS} lvsbox
+dv_cell {YA2GSC} {YA2GSC} lvsbox
+dv_cell {CHIP} {CHIP} matched
+dv_obj_count -transformed_nets {449 449} -transformed_inst {349 349} -transformed_port {39 39}
+dv_end
