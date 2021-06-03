@@ -1,0 +1,105 @@
+ 
+****************************************
+Report : timing
+        -path full
+        -delay max
+        -max_paths 1
+Design : Deco
+Version: N-2017.09-SP2
+Date   : Thu Jun  3 00:39:44 2021
+****************************************
+
+ # A fanout number of 1000 was used for high fanout net computations.
+
+Operating Conditions: WCCOM   Library: fsa0m_a_generic_core_ss1p62v125c
+Wire Load Model Mode: enclosed
+
+  Startpoint: siso1/branch_metrics_reg[4][3][2]
+              (rising edge-triggered flip-flop clocked by clk_p_i)
+  Endpoint: siso1/LLR_reg[3][11]
+            (rising edge-triggered flip-flop clocked by clk_p_i)
+  Path Group: clk_p_i
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  Deco               G200K                 fsa0m_a_generic_core_tt1p8v25c
+  Siso               enG50K                fsa0m_a_generic_core_tt1p8v25c
+  Siso_DW01_add_309  enG5K                 fsa0m_a_generic_core_tt1p8v25c
+  Siso_DW01_add_311  enG5K                 fsa0m_a_generic_core_tt1p8v25c
+  Siso_DW01_sub_6    enG5K                 fsa0m_a_generic_core_tt1p8v25c
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock clk_p_i (rise edge)                               0.00       0.00
+  clock network delay (ideal)                             0.50       0.50
+  siso1/branch_metrics_reg[4][3][2]/CK (QDFFRBN)          0.00 #     0.50 r
+  siso1/branch_metrics_reg[4][3][2]/Q (QDFFRBN)           0.55       1.05 r
+  siso1/U114/O (INV1S)                                    0.13       1.18 f
+  siso1/U1211/O (INV1S)                                   0.24       1.42 r
+  siso1/add_92_G5/B[2] (Siso_DW01_add_309)                0.00       1.42 r
+  siso1/add_92_G5/U93/O (ND2S)                            0.17       1.59 f
+  siso1/add_92_G5/U131/O (OAI12HS)                        0.20       1.79 r
+  siso1/add_92_G5/U129/O (AOI12HS)                        0.10       1.89 f
+  siso1/add_92_G5/U104/O (OAI12HS)                        0.26       2.16 r
+  siso1/add_92_G5/U122/O (XNR2HS)                         0.26       2.42 r
+  siso1/add_92_G5/SUM[5] (Siso_DW01_add_309)              0.00       2.42 r
+  siso1/add_106_G5/A[5] (Siso_DW01_add_311)               0.00       2.42 r
+  siso1/add_106_G5/U139/O (NR2)                           0.15       2.58 f
+  siso1/add_106_G5/U115/O (OAI12HS)                       0.20       2.78 r
+  siso1/add_106_G5/U113/O (AOI12HS)                       0.10       2.88 f
+  siso1/add_106_G5/U109/O (OAI12HS)                       0.26       3.14 r
+  siso1/add_106_G5/U116/O (AOI12HS)                       0.15       3.30 f
+  siso1/add_106_G5/U110/O (OAI12HS)                       0.27       3.57 r
+  siso1/add_106_G5/U118/O (AOI12HS)                       0.15       3.73 f
+  siso1/add_106_G5/U150/O (OAI12HS)                       0.22       3.94 r
+  siso1/add_106_G5/U148/O (XNR2HS)                        0.15       4.09 r
+  siso1/add_106_G5/SUM[11] (Siso_DW01_add_311)            0.00       4.09 r
+  siso1/U5472/O (AO222S)                                  0.33       4.42 r
+  siso1/U5476/O (OR3B2)                                   0.26       4.67 r
+  siso1/U2956/O (INV1S)                                   0.13       4.81 f
+  siso1/U5599/O (OAI22S)                                  0.22       5.02 r
+  siso1/U2772/O (OR2B1S)                                  0.17       5.19 r
+  siso1/U1316/O (OA222)                                   0.63       5.82 r
+  siso1/U41/O (BUF1)                                      0.39       6.22 r
+  siso1/U1448/O (MUX2S)                                   0.43       6.65 r
+  siso1/U1349/O (INV1S)                                   0.12       6.76 f
+  siso1/U5679/O (AN2)                                     0.23       6.99 f
+  siso1/U5680/O (OAI22S)                                  0.23       7.22 r
+  siso1/U5681/O (AOI22S)                                  0.11       7.33 f
+  siso1/U1351/O (OAI22S)                                  0.22       7.56 r
+  siso1/U1339/O (NR2P)                                    0.15       7.71 f
+  siso1/U857/O (NR2T)                                     0.27       7.97 r
+  siso1/U1341/O (MUX3)                                    0.26       8.23 f
+  siso1/sub_236/B[0] (Siso_DW01_sub_6)                    0.00       8.23 f
+  siso1/sub_236/U172/O (INV1S)                            0.18       8.41 r
+  siso1/sub_236/U103/O (NR2P)                             0.10       8.52 f
+  siso1/sub_236/U118/O (OAI12H)                           0.18       8.70 r
+  siso1/sub_236/U142/O (AOI12HS)                          0.14       8.84 f
+  siso1/sub_236/U104/O (OAI12H)                           0.21       9.05 r
+  siso1/sub_236/U105/O (AOI12H)                           0.13       9.18 f
+  siso1/sub_236/U94/O (OAI12HP)                           0.18       9.36 r
+  siso1/sub_236/U93/O (AOI12HP)                           0.09       9.46 f
+  siso1/sub_236/U95/O (OAI12HP)                           0.17       9.62 r
+  siso1/sub_236/U92/O (AOI12HP)                           0.08       9.70 f
+  siso1/sub_236/U111/O (OA12P)                            0.22       9.92 f
+  siso1/sub_236/U110/O (XOR2HP)                           0.15      10.07 f
+  siso1/sub_236/DIFF[11] (Siso_DW01_sub_6)                0.00      10.07 f
+  siso1/U5707/O (MUX2)                                    0.26      10.33 f
+  siso1/LLR_reg[3][11]/D (QDFFRBN)                        0.00      10.33 f
+  data arrival time                                                 10.33
+
+  clock clk_p_i (rise edge)                              10.00      10.00
+  clock network delay (ideal)                             0.50      10.50
+  clock uncertainty                                      -0.10      10.40
+  siso1/LLR_reg[3][11]/CK (QDFFRBN)                       0.00      10.40 r
+  library setup time                                     -0.06      10.34
+  data required time                                                10.34
+  --------------------------------------------------------------------------
+  data required time                                                10.34
+  data arrival time                                                -10.33
+  --------------------------------------------------------------------------
+  slack (MET)                                                        0.00
+
+
+1
